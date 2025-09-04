@@ -4,12 +4,19 @@ project:
 website:
   title: "ISSS626"
   navbar:
-    left:
+    background: secondary
+    search: true
+    left: 
+      - text: "Hands-on Exercise"
+        menu: 
+          - text: "Hands-on Exercise 1"
+            href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01.html"
+          - text: "Hands-on Exercise 2"
+          - text: "Hands-on Exercise 3"
+    right:
       - href: index.qmd
         text: Home
       - about.qmd
-      - href: 
-        text: Hands-on_EX01
 
 format:
   html:

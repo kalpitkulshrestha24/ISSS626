@@ -1,0 +1,70 @@
+---
+title: "Hands-on Exercise 01"
+author: "Kalpit"
+---
+## Introduction to Geospatial Data Science
+Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, you will learn how to perform geospatial data science tasks in R by using sf package.
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+## Importing the data
+
+### Importing Polygon feature data for Masterplan
+
+```{r}
+mpsz = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/MasterPlan2014SubzoneBoundaryWebSHP", 
+                  layer = "MP14_SUBZONE_WEB_PL")
+
+```
+
+### Importing polyline feature data in shapefile form for Cycling
+
+```{r}
+Cyclingpath = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/CyclingPath_Apr2025", layer = "CyclingPathGazette")
+
+```
+### Importing polyline feature data in shapefile form for Preschoolslocation dataset
+
+```{r}
+preschool = st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
+```
+## A simple feature dataframe
+### Retriving geometery list-column
+
+```{r}
+st_geometry(mpsz)
+```
+
+```{r}
+st_geometry(preschool)
+```
+
+```{r}
+st_geometry(Cyclingpath)
+```
+### Using glimpse() funtion
+
+```{r}
+glimpse(mpsz)
+```
+
+### Using head() funtion
+
+```{r}
+head(mpsz)
+```
+## ploting the Geospatial data
+```{r}
+plot(mpsz)
+```
+
+
+
+
+
+
+
+
+

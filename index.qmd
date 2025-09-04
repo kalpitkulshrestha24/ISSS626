@@ -1,11 +1,16 @@
 ---
 title: "ISSS626"
+author: "Kalpit"
+date: "04/Sept/2025"
+date-modified: "04/Sept/2025"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Welcome! to the **ISSS626 Geospatial Analytics & Application** module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course.
 
 ```{r}
-1 + 1
+
+1+1
+
 ```
+
+
