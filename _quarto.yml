@@ -7,6 +7,7 @@ website:
     background: secondary
     search: true
     left: 
+      - text: "Take Home Exercise"
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1a"
@@ -14,7 +15,13 @@ website:
           - text: "Hands-on Exercise 1b"
             href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01b.html"
           - text: "Hands-on Exercise 2"
+            href: "Hands-on_Exercise/Hands-on EX02/Chapter 04.html"
           - text: "Hands-on Exercise 3"
+          - text: "Hands-on Exercise 4"
+          - text: "Hands-on Exercise 5"
+          - text: "Hands-on Exercise 6"
+          - text: "Hands-on Exercise 7"
+          - text: "Hands-on Exercise 8"
     right:
       - href: index.qmd
         text: Home

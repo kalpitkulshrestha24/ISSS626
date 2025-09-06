@@ -3,7 +3,55 @@ title: "Hands-on Exercise 01B"
 author: "Kalpit Kulshrestha"
 ---
 
-# 
+# Choropleth Mapping with R
+
+## Installing packages
+
+```{r}
+pacman::p_load(sf, tmap, tidyverse, rvest)
+```
+
+## Importing the Data into R
+
+### Data Source
+
+The two data is from [data.gov.sg](https://data.gov.sg/) and [Department of statistics, Singapore](https://www.singstat.gov.sg/). which has been download and read to use for geospatial analysis.
+
+### Importing the Geospatial data into R
+
+```{r}
+mpsz <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/Data/Geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+```
+#### Tidying data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

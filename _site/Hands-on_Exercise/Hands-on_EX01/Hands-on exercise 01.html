@@ -128,6 +128,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">Take Home Exercise</span>
+    </span>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Hands-on Exercise</span>
@@ -141,8 +146,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01b.html">
  <span class="dropdown-text">Hands-on Exercise 1b</span></a>
   </li>  
-        <li class="dropdown-header">Hands-on Exercise 2</li>
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX02/Chapter 04.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
         <li class="dropdown-header">Hands-on Exercise 3</li>
+        <li class="dropdown-header">Hands-on Exercise 4</li>
+        <li class="dropdown-header">Hands-on Exercise 5</li>
+        <li class="dropdown-header">Hands-on Exercise 6</li>
+        <li class="dropdown-header">Hands-on Exercise 7</li>
+        <li class="dropdown-header">Hands-on Exercise 8</li>
     </ul>
   </li>
 </ul>
@@ -171,7 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction-to-geospatial-data-science" id="toc-introduction-to-geospatial-data-science" class="nav-link active" data-scroll-target="#introduction-to-geospatial-data-science">Introduction to Geospatial Data Science</a></li>
+  <li><a href="#geospatial-data-science-with-r" id="toc-geospatial-data-science-with-r" class="nav-link active" data-scroll-target="#geospatial-data-science-with-r">Geospatial Data Science with R</a>
+  <ul class="collapse">
   <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">Importing the data</a>
   <ul class="collapse">
   <li><a href="#importing-polygon-feature-data-for-masterplan" id="toc-importing-polygon-feature-data-for-masterplan" class="nav-link" data-scroll-target="#importing-polygon-feature-data-for-masterplan">Importing Polygon feature data for Masterplan</a></li>
@@ -195,6 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#use-case-1-land-aquition-analysis" id="toc-use-case-1-land-aquition-analysis" class="nav-link" data-scroll-target="#use-case-1-land-aquition-analysis">Use Case 1 : Land Aquition analysis</a></li>
   <li><a href="#use-case-2-to-determine-the-number-of-pre-schools-by-planning-subzone" id="toc-use-case-2-to-determine-the-number-of-pre-schools-by-planning-subzone" class="nav-link" data-scroll-target="#use-case-2-to-determine-the-number-of-pre-schools-by-planning-subzone">Use Case 2: To determine the number of pre-schools by planning subzone</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -227,13 +242,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction-to-geospatial-data-science" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-to-geospatial-data-science">Introduction to Geospatial Data Science</h2>
+<section id="geospatial-data-science-with-r" class="level1">
+<h1>Geospatial Data Science with R</h1>
 <p>Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, you will learn how to perform geospatial data science tasks in R by using sf package.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
 <section id="importing-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-the-data">Importing the data</h2>
 <section id="importing-polygon-feature-data-for-masterplan" class="level3">
@@ -1015,6 +1029,7 @@ Projected CRS: SVY21 / Singapore TM
 </div>
 
 
+</section>
 </section>
 </section>
 

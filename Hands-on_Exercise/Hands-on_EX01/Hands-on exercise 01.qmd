@@ -1,9 +1,9 @@
 ---
 title: "Hands-on Exercise 01A"
-author: "Kalpit"
+author: "Kalpit Kulshrestha"
 ---
 
-## Introduction to Geospatial Data Science
+# Geospatial Data Wrangling with R
 
 Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, you will learn how to perform geospatial data science tasks in R by using sf package.
 
@@ -20,28 +20,26 @@ mpsz = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_
                   layer = "MP14_SUBZONE_WEB_PL")
 
 ```
+
 ```{r}
 st_crs(mpsz)
 ```
+
 ### Importing polyline feature data in shapefile form for Cycling
 
 ```{r}
 Cyclingpath = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/CyclingPath_Apr2025", layer = "CyclingPathGazette")
 
 ```
+
 ```{r}
 st_crs(Cyclingpath)
 ```
+
 ```{r}
 Cyclingpath <- st_transform(Cyclingpath, crs = 3414)
 mpsz  <- st_transform(mpsz,  crs = 3414)
 ```
-
-
-
-
-
-
 
 ### Importing polyline feature data in shapefile form for Preschoolslocation dataset
 
@@ -181,6 +179,7 @@ plot(buffer_cycling_selected)
 ```
 
 ### Use Case 2: To determine the number of pre-schools by planning subzone
+
 ```{r}
 mpsz$`PreSch Count`<- lengths(st_intersects(mpsz, preschool))
 ```
@@ -192,6 +191,7 @@ summary(mpsz$`PreSch Count`)
 ```{r}
 top_n(mpsz, 1, `PreSch Count`)
 ```
+
 ```{r}
 mpsz$Area <- mpsz %>%
   st_area()
@@ -218,8 +218,6 @@ ggplot(data=mpsz,
       y = "Frequency")
 ```
 
-
-
 ```{r}
 ggplot(data=mpsz, 
        aes(y = `PreSch Count`, 
@@ -232,12 +230,3 @@ ggplot(data=mpsz,
       x = "Pre-school density (per km sq)",
       y = "Pre-school count")
 ```
-
-
-
-
-
-
-
-
-

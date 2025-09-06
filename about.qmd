@@ -1,9 +1,10 @@
 ---
 title: "About"
+author: "Kalpit Kulshrestha"
 ---
 
-About this site
+about this site!
 
-```{r}
-1 + 1
-```
+This website serves as a dedicated space for the submission of my academic work, including Hands-on Exercises and Take-home Exercises. It is designed to showcase my learning journey, practical applications of concepts, and problem-solving approaches. Each submission reflects the effort, knowledge, and skills I continue to build throughout my coursework.
+
+The goal of this site is to provide a structured and organized way to track progress, document insights, and create a personal archive of completed exercises for future reference.
