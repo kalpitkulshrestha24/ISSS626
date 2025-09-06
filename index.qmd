@@ -7,10 +7,6 @@ date-modified: "04/Sept/2025"
 
 Welcome! to the **ISSS626 Geospatial Analytics & Application** module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course.
 
-```{r}
+## Spatial Data Analytics
 
-1+1
-
-```
-
-
+[![(Image source: CVRD)](images/642d1bd9701b7ccac1e13893_jYKRsgDSe2cYDZw5HOBLPIAp0lIb-Ebx6ajxcZlRmdlrtAgHC0Gdo2Jk6jzVSopZUFLCcLoz0vseuMEq0sRodFVBtfUFafzZo1Mez85pl93fTt8tyV6dh4RjUjU7FWOU-cmx7LwxUJI_mxMFT2kH.png)](https://www.velotio.com/engineering-blog/spatial-data-analytics-the-what-why-and-how)
