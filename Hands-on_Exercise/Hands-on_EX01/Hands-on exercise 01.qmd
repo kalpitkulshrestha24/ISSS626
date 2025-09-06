@@ -2,7 +2,9 @@
 title: "Hands-on Exercise 01"
 author: "Kalpit"
 ---
+
 ## Introduction to Geospatial Data Science
+
 Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, you will learn how to perform geospatial data science tasks in R by using sf package.
 
 ```{r}
@@ -18,19 +20,37 @@ mpsz = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_
                   layer = "MP14_SUBZONE_WEB_PL")
 
 ```
-
+```{r}
+st_crs(mpsz)
+```
 ### Importing polyline feature data in shapefile form for Cycling
 
 ```{r}
 Cyclingpath = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/CyclingPath_Apr2025", layer = "CyclingPathGazette")
 
 ```
+```{r}
+st_crs(Cyclingpath)
+```
+```{r}
+Cyclingpath <- st_transform(Cyclingpath, crs = 3414)
+mpsz  <- st_transform(mpsz,  crs = 3414)
+```
+
+
+
+
+
+
+
 ### Importing polyline feature data in shapefile form for Preschoolslocation dataset
 
 ```{r}
 preschool = st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
 ```
+
 ## A simple feature dataframe
+
 ### Retriving geometery list-column
 
 ```{r}
@@ -44,6 +64,7 @@ st_geometry(preschool)
 ```{r}
 st_geometry(Cyclingpath)
 ```
+
 ### Using glimpse() funtion
 
 ```{r}
@@ -55,9 +76,161 @@ glimpse(mpsz)
 ```{r}
 head(mpsz)
 ```
+
 ## ploting the Geospatial data
+
 ```{r}
 plot(mpsz)
+```
+
+```{r}
+plot(st_geometry(mpsz))
+plot(mpsz["PLN_AREA_N"])
+```
+
+```{r}
+plot(st_geometry(mpsz))
+plot(st_geometry(preschool), 
+     add = TRUE)
+```
+
+## Working with Projection
+
+### projection transformation
+
+```{r}
+st_crs(mpsz)
+```
+
+```{r}
+mpsz <- st_set_crs(mpsz, 3414)
+```
+
+```{r}
+st_crs(mpsz)
+```
+
+### Transforming Projection
+
+```{r}
+preschool <- st_transform(preschool, 
+                              crs = 3414)
+st_geometry(preschool)
+plot(st_geometry(mpsz))
+plot(st_geometry(preschool), add = TRUE)
+```
+
+## Importing and Converting An Aspatial Data
+
+```{r}
+listings <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/aspatial/listings.csv")
+list(listings)
+```
+
+```{r}
+listings_sf <- st_as_sf(listings, 
+                       coords = c("longitude", "latitude"),
+                       crs=4326) %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+glimpse(listings_sf)
+plot(st_geometry(mpsz))
+plot(st_geometry(listings_sf), add = TRUE)
+```
+
+## Geoprocessing with sf package
+
+### Use Case 1 : Land Aquition analysis
+
+```{r}
+buffer_cycling <- st_buffer(
+  Cyclingpath, dist=5, nQuadSegs = 30)
+```
+
+```{r}
+buffer_cycling$AREA <- st_area(buffer_cycling)
+```
+
+```{r}
+buffer_cycling <- buffer_cycling %>%
+  mutate(AREA = st_area(geometry))
+```
+
+```{r}
+sum(buffer_cycling$AREA)
+```
+
+```{r}
+mpsz_selected <- mpsz %>% filter(SUBZONE_N == "TAMPINES WEST") 
+```
+
+```{r}
+st_crs(buffer_cycling)
+st_crs(mpsz_selected)
+```
+
+```{r}
+buffer_cycling_selected <- st_intersection(
+  buffer_cycling, mpsz_selected)
+```
+
+```{r}
+plot(buffer_cycling_selected)
+```
+
+### Use Case 2: To determine the number of pre-schools by planning subzone
+```{r}
+mpsz$`PreSch Count`<- lengths(st_intersects(mpsz, preschool))
+```
+
+```{r}
+summary(mpsz$`PreSch Count`)
+```
+
+```{r}
+top_n(mpsz, 1, `PreSch Count`)
+```
+```{r}
+mpsz$Area <- mpsz %>%
+  st_area()
+```
+
+```{r}
+mpsz <- mpsz %>%
+  mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
+```
+
+```{r}
+hist(mpsz$`PreSch Density`)
+```
+
+```{r}
+ggplot(data=mpsz, 
+       aes(x= as.numeric(`PreSch Density`)))+
+  geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue") +
+  labs(title = "Are pre-school even distributed in Singapore?",
+       subtitle= "There are many planning subzones with a single pre-school, on the other hand, \nthere are seven planning subzones with at least 30 or more pre-schools",
+      x = "Pre-school density (per km sq)",
+      y = "Frequency")
+```
+
+
+
+```{r}
+ggplot(data=mpsz, 
+       aes(y = `PreSch Count`, 
+           x= as.numeric(`PreSch Density`)))+
+  geom_point(color="black", 
+             fill="light blue") +
+  xlim(0, 40) +
+  ylim(0, 40) +
+  labs(title = "",
+      x = "Pre-school density (per km sq)",
+      y = "Pre-school count")
 ```
 
 

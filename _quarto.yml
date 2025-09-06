@@ -9,8 +9,9 @@ website:
     left: 
       - text: "Hands-on Exercise"
         menu: 
-          - text: "Hands-on Exercise 1"
+          - text: "Hands-on Exercise 1a"
             href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01.html"
+          - text: "Hands-on Exercise 1b"
           - text: "Hands-on Exercise 2"
           - text: "Hands-on Exercise 3"
     right:
