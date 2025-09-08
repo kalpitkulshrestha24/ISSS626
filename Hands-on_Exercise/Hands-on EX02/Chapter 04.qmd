@@ -3,4 +3,92 @@ title: "Hands-0n Exercise 2A"
 author: "Kalpit Kulshrestha"
 ---
 
-hands on exercise 02 A will bw here soon.
+# First-order Spatial Point Patterns Analysis Methods
+
+## Data source
+The Child care service data is from data.gov.sg and aster Plan 2019 Subzone Boundary (No Sea) is from another source.
+ 
+## Installing and loading some new packages
+
+```{r}
+pacman::p_load(sf, terra, spatstat, 
+               tmap, rvest, tidyverse)
+```
+
+## importing and Wrangling Geospaitial data
+
+```{r}
+mpsz_sf <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/Geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>% 
+  st_zm(drop = TRUE, what = "ZM") %>% st_transform(crs = 3414)
+```
+```{r}
+extract_kml_field <- function(html_text, field_name) {
+  if (is.na(html_text) || html_text == "") return(NA_character_)
+  
+  page <- read_html(html_text)
+  rows <- page %>% html_elements("tr")
+  
+  value <- rows %>%
+    keep(~ html_text2(html_element(.x, "th")) == field_name) %>%
+    html_element("td") %>%
+    html_text2()
+  
+  if (length(value) == 0) NA_character_ else value
+}
+```
+
+```{r}
+mpsz_sf <- mpsz_sf %>%
+  mutate(
+    REGION_N = map_chr(Description, extract_kml_field, "REGION_N"),
+    PLN_AREA_N = map_chr(Description, extract_kml_field, "PLN_AREA_N"),
+    SUBZONE_N = map_chr(Description, extract_kml_field, "SUBZONE_N"),
+    SUBZONE_C = map_chr(Description, extract_kml_field, "SUBZONE_C")
+  ) %>%
+  select(-Name, -Description) %>%
+  relocate(geometry, .after = last_col())
+
+```
+
+
+```{r}
+mpsz_cl <- mpsz_sf %>%
+  filter(SUBZONE_N != "SOUTHERN GROUP",
+         PLN_AREA_N != "WESTERN ISLANDS",
+         PLN_AREA_N != "NORTH-EASTERN ISLANDS")
+```
+
+```{r}
+write_rds(mpsz_cl, 
+          "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/GEospatial/mpsz_cl.rds")
+
+```
+
+### Importing and loading Child care service data
+
+```{r}
+childcare_sf <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/Aspatial/ChildCareServices.kml") %>% 
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 3414)
+```
+```{r}
+st_crs(mpsz_cl)
+```
+```{r}
+st_crs(childcare_sf)
+```
+
+
+### Mapping the geospatial data
+
+```{r}
+plot(st_geometry(mpsz_cl))
+plot(st_geometry(childcare_sf), add = TRUE)
+```
+```{r}
+tmap_mode('view')
+tm_shape(childcare_sf)+
+  tm_dots()
+```
+## Geospatial data wrangling
+
