@@ -189,7 +189,6 @@ kde_SG_diggle <- density(
 ```{r}
 plot(kde_SG_diggle)
 ```
-
 ```{r}
 summary(kde_SG_diggle)
 ```
