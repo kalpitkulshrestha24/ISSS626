@@ -6,8 +6,9 @@ author: "Kalpit Kulshrestha"
 # First-order Spatial Point Patterns Analysis Methods
 
 ## Data source
+
 The Child care service data is from data.gov.sg and aster Plan 2019 Subzone Boundary (No Sea) is from another source.
- 
+
 ## Installing and loading some new packages
 
 ```{r}
@@ -21,6 +22,7 @@ pacman::p_load(sf, terra, spatstat,
 mpsz_sf <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/Geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>% 
   st_zm(drop = TRUE, what = "ZM") %>% st_transform(crs = 3414)
 ```
+
 ```{r}
 extract_kml_field <- function(html_text, field_name) {
   if (is.na(html_text) || html_text == "") return(NA_character_)
@@ -50,7 +52,6 @@ mpsz_sf <- mpsz_sf %>%
 
 ```
 
-
 ```{r}
 mpsz_cl <- mpsz_sf %>%
   filter(SUBZONE_N != "SOUTHERN GROUP",
@@ -71,13 +72,14 @@ childcare_sf <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 3414)
 ```
+
 ```{r}
 st_crs(mpsz_cl)
 ```
+
 ```{r}
 st_crs(childcare_sf)
 ```
-
 
 ### Mapping the geospatial data
 
@@ -85,10 +87,186 @@ st_crs(childcare_sf)
 plot(st_geometry(mpsz_cl))
 plot(st_geometry(childcare_sf), add = TRUE)
 ```
+
 ```{r}
 tmap_mode('view')
 tm_shape(childcare_sf)+
   tm_dots()
 ```
-## Geospatial data wrangling
+
+## Geospatial Data Wrangling
+
+using specific data structures like ppp(planar point pattern)
+
+### Converting sf data frames to *ppp* class
+
+spatstat will use the point event data in ppp object form using *\[ as.ppp()\]* of spatstat package to convert childcare_sf to ppp format.
+
+```{r}
+childcare_ppp <- as.ppp(childcare_sf)
+```
+
+```{r}
+class(childcare_ppp)
+```
+
+```{r}
+summary(childcare_ppp)
+```
+
+### Creating *owin* object
+
+```{r}
+sg_owin <- as.owin(mpsz_cl)
+```
+
+```{r}
+class(sg_owin)
+```
+
+```{r}
+plot(sg_owin)
+```
+
+### Combining point events object and *owin* object
+
+```{r}
+childcareSG_ppp = childcare_ppp[sg_owin]
+```
+
+```{r}
+childcareSG_ppp
+```
+
+## Clark-Evan Test for Nearest Neighbour Analysis
+
+a spatial statistics method that calculates the average distance between each point and its closest neighbor to determine if a pattern of points is clustered, dispersed, or randomly distributed.
+
+The test hypotheses are:
+
+Ho = The distribution of childcare services are randomly distributed.
+
+H1= The distribution of childcare services are not randomly distributed.
+
+The 95% confident interval will be used.
+
+### perfromin the Clark-Evans test without CSR
+
+```{r}
+clarkevans.test(childcareSG_ppp, correction = "none", clipregion = "sg_owin", alternative = c("clustered"))
+```
+Statistical Conclusion:
+
+
+Business Insights from above analysis:
+
+### Performing Clark_Evans with CSR
+
+```{r}
+clarkevans.test(childcareSG_ppp,
+                correction="none",
+                clipregion="sg_owin",
+                alternative=c("clustered"),
+                method="MonteCarlo",
+                nsim=99)
+```
+Statistical Conclusion:
+
+Business Insights:
+
+## Kernal Density Estimation Method
+
+### Working with automatic bandwidth selection method
+
+```{r}
+kde_SG_diggle <- density(
+  childcareSG_ppp,
+  sigma=bw.diggle,
+  edge=TRUE,
+  kernel="gaussian") 
+```
+
+```{r}
+plot(kde_SG_diggle)
+```
+
+```{r}
+summary(kde_SG_diggle)
+```
+we are retrieving the bandwidth which used to compute the kde layer.
+
+```{r}
+bw <- bw.diggle(childcareSG_ppp)
+bw
+```
+### Rescalling KDE values
+```{r}
+childcareSG_ppp_km <- rescale.ppp(
+  childcareSG_ppp, 1000, "km")
+```
+
+```{r}
+kde_childcareSG_km <- density(childcareSG_ppp_km,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                              kernel="gaussian")
+```
+
+```{r}
+plot(kde_childcareSG_km)
+```
+### working with different automatic bandwidth methods
+
+```{r}
+bw.CvL(childcareSG_ppp_km)
+```
+
+```{r}
+bw.scott(childcareSG_ppp_km)
+```
+```{r}
+bw.ppl(childcareSG_ppp_km)
+```
+
+```{r}
+bw.diggle(childcareSG_ppp_km)
+```
+
+```{r}
+kde_childcareSG.ppl <- density(childcareSG_ppp_km, 
+                               sigma=bw.ppl, 
+                               edge=TRUE,
+                               kernel="gaussian")
+par(mfrow=c(1,2))
+plot(kde_childcareSG_km, main = "bw.diggle")
+plot(kde_childcareSG.ppl, main = "bw.ppl")
+```
+### Workinf with differnet kernel methods
+
+```{r}
+par(mfrow=c(2,2))
+plot(density(childcareSG_ppp_km, 
+             sigma=0.2959712, 
+             edge=TRUE, 
+             kernel="gaussian"), 
+     main="Gaussian")
+plot(density(childcareSG_ppp_km, 
+             sigma=0.2959712, 
+             edge=TRUE, 
+             kernel="epanechnikov"), 
+     main="Epanechnikov")
+plot(density(childcareSG_ppp_km, 
+             sigma=0.2959712, 
+             edge=TRUE, 
+             kernel="quartic"), 
+     main="Quartic")
+plot(density(childcareSG_ppp_km, 
+             sigma=0.2959712, 
+             edge=TRUE, 
+             kernel="disc"), 
+     main="Disc")
+```
+
+
+
 

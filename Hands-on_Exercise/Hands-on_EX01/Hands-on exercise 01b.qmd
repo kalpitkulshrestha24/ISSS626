@@ -22,7 +22,9 @@ The two data is from [data.gov.sg](https://data.gov.sg/) and [Department of stat
 ```{r}
 mpsz <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/Geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
 ```
+
 #### Tidying data
+
 ```{r}
 extract_kml_field <- function(html_text, field_name) {
   if (is.na(html_text) || html_text == "") return(NA_character_)
@@ -51,7 +53,6 @@ mpsz <- mpsz %>%
   relocate(geometry, .after = last_col())
 ```
 
-
 ```{r}
 mpsz
 ```
@@ -61,11 +62,13 @@ mpsz
 ```{r}
 popdata <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX02/data/Aspatial/respopagesexfa2024.csv")
 ```
+
 ### Data Preparation
+
 Before a thematic map can be prepared, you are required to prepare a data table with year 2020 values. The data table should include the variables PA, SZ, YOUNG, ECONOMY ACTIVE, AGED, TOTAL, DEPENDENCY.
 
-
 #### Data Wrangling
+
 ```{r}
 popdata2024 <- popdata %>%
   group_by(PA, SZ, AG) %>%
@@ -85,7 +88,8 @@ mutate(`DEPENDENCY` = (`YOUNG` + `AGED`)
        `ECONOMY ACTIVE`, `AGED`, 
        `TOTAL`, `DEPENDENCY`)
 ```
-####  Joining both data
+
+#### Joining both data
 
 ```{r}
 popdata2024 <- popdata2024 %>%
@@ -99,7 +103,8 @@ mpsz_pop2024 <- left_join(mpsz, popdata2024,
                           by = c("SUBZONE_N" = "SZ"))
 ```
 
-## Choropleth Mapping 
+## Choropleth Mapping
+
 ### Plotting using qtm()
 
 ```{r}
@@ -107,7 +112,9 @@ tmap_mode("plot")
 qtm(shp = mpsz_pop2024, 
     fill = "DEPENDENCY")
 ```
+
 ### Creating map by using tmap's element
+
 ```{r}
 tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
@@ -133,6 +140,7 @@ tm_shape(mpsz_pop2024) +
 tm_shape(mpsz_pop2024) +
   tm_polygons()
 ```
+
 #### map using tm_ploygon()
 
 ```{r}
@@ -148,7 +156,6 @@ tm_shape(mpsz_pop2024)+
   tm_borders()
 ```
 
-
 ```{r}
 tm_shape(mpsz_pop2024)+
   tm_fill("DEPENDENCY") +
@@ -160,6 +167,7 @@ tm_shape(mpsz_pop2024)+
 ### data classification ,ethods of tmap
 
 #### Plotting choropleth maps with built-in classification methods
+
 this code gives us a qunatile data classification that is using 5 classes **n = 5**
 
 ```{r}
@@ -170,7 +178,9 @@ tm_shape(mpsz_pop2024) +
                 n = 5)) +
   tm_borders(fill_alpha = 0.5)
 ```
+
 now, equal data classification method is used here.
+
 ```{r}
 tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
@@ -217,6 +227,7 @@ tm_shape(mpsz_pop2024) +
                 values = "-brewer.greens")) +
   tm_borders(fill_alpha = 0.5)
 ```
+
 #### cartographic furniture
 
 ```{r}
@@ -236,6 +247,7 @@ tm_shape(mpsz_pop2024) +
 ### Map Layout
 
 #### Map Legend
+
 ```{r}
 tm_shape(mpsz_pop2024) +
   tm_polygons(fill = "DEPENDENCY",
@@ -270,8 +282,7 @@ tm_shape(mpsz_pop2024) +
 tmap_style("cobalt")
 ```
 
-Here, I tried tmap_styles from the library.  I prefer to use natural or watercolor style.
-
+Here, I tried tmap_styles from the library. I prefer to use natural or watercolor style.
 
 ## drawing small multiple choropleth maps
 
@@ -291,6 +302,7 @@ tm_shape(mpsz_pop2024) +
   tm_borders(fill_alpha = 0.5) +
   tmap_style("natural")
 ```
+
 ### 2.5.2
 
 ```{r}
@@ -322,6 +334,7 @@ tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
 ```
 
 ### 2.5.3
+
 ```{r}
 tm_shape(mpsz_pop2024) +
   tm_fill(fill = "DEPENDENCY",
@@ -354,6 +367,7 @@ mpsz_pop2024 %>%
 ```
 
 ## complementing Thematic map with statistical chart
+
 ```{r}
 mpsz_pop2024 %>%
   filter(REGION_N == "CENTRAL REGION") %>%
@@ -393,6 +407,7 @@ tm_shape(outlier_sf) +
 ```
 
 ## creating internactive mapping
+
 ```{r}
 region_selected <- mpsz_pop2024 %>%
   filter(REGION_N == "CENTRAL REGION")
@@ -414,6 +429,7 @@ tm_shape(region_selected,
   tm_shape(outlier_sf) +
   tm_borders(col = "red", lwd = 2)
 ```
+
 ```{r}
 tmap_mode("plot")
 ```
@@ -447,51 +463,3 @@ tm_shape(region_selected,
 ```{r}
 tmap_mode("plot")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
