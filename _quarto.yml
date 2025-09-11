@@ -8,21 +8,26 @@ website:
     search: true
     left: 
       - text: "Take Home Exercise"
+        menu: 
+          - text: "Take Home Exercise 01"
       - text: "Hands-on Exercise"
         menu: 
-          - text: "Hands-on Exercise 1a"
+          - text: "Hands-on Exercise 1A"
             href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01.html"
-          - text: "Hands-on Exercise 1b"
+          - text: "Hands-on Exercise 1B"
             href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01b.html"
-          - text: "Hands-on Exercise 2"
+          - text: "Hands-on Exercise 2A"
             href: "Hands-on_Exercise/Hands-on EX02/Chapter 04.html"
           - text: "Hands-on Exercise 3"
+            href: "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html" 
           - text: "Hands-on Exercise 4"
           - text: "Hands-on Exercise 5"
           - text: "Hands-on Exercise 6"
           - text: "Hands-on Exercise 7"
           - text: "Hands-on Exercise 8"
     right:
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/kalpit-kulshrestha-a1297b178/"
       - href: index.qmd
         text: Home
       - about.qmd

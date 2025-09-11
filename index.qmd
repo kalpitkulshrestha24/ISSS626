@@ -1,8 +1,8 @@
 ---
-title: "ISSS626"
+title: "ISSS626 - GAA"
 author: "Kalpit"
 date: "04/Sept/2025"
-date-modified: "04/Sept/2025"
+date-modified: "11/Sept/2025"
 ---
 
 Welcome! to the **ISSS626 Geospatial Analytics & Application** module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course.

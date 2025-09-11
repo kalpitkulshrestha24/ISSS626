@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS626",
+    "title": "ISSS626 - GAA",
     "section": "",
     "text": "Welcome! to the ISSS626 Geospatial Analytics & Application module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course."
   },
@@ -79,7 +79,7 @@
   {
     "objectID": "index.html#spatial-data-analytics",
     "href": "index.html#spatial-data-analytics",
-    "title": "ISSS626",
+    "title": "ISSS626 - GAA",
     "section": "Spatial Data Analytics",
     "text": "Spatial Data Analytics\n\n\n\n(Image source: CVRD)"
   },
@@ -187,5 +187,103 @@
     "title": "Hands-0n Exercise 2A",
     "section": "",
     "text": "kde_SG_diggle &lt;- density(\n  childcareSG_ppp,\n  sigma=bw.diggle,\n  edge=TRUE,\n  kernel=\"gaussian\") \n\n\nplot(kde_SG_diggle)\n\n\n\n\n\n\n\n\n\nsummary(kde_SG_diggle)\n\nreal-valued pixel image\n128 x 128 pixel array (ny, nx)\nenclosing rectangle: [2667.538, 55941.94] x [21448.47, 50256.33] units\ndimensions of each pixel: 416 x 225.0614 units\nImage is defined on a subset of the rectangular grid\nSubset area = 669941961.12249 square units\nSubset area fraction = 0.437\nPixel values (inside window):\n    range = [-6.584123e-21, 3.063698e-05]\n    integral = 1927.788\n    mean = 2.877545e-06\n\n\nwe are retrieving the bandwidth which used to compute the kde layer.\n\nbw &lt;- bw.diggle(childcareSG_ppp)\nbw\n\n   sigma \n295.9712 \n\n\n\n\n\n\nchildcareSG_ppp_km &lt;- rescale.ppp(\n  childcareSG_ppp, 1000, \"km\")\n\n\nkde_childcareSG_km &lt;- density(childcareSG_ppp_km,\n                              sigma=bw.diggle,\n                              edge=TRUE,\n                              kernel=\"gaussian\")\n\n\nplot(kde_childcareSG_km)\n\n\n\n\n\n\n\n\n\n\n\n\nbw.CvL(childcareSG_ppp_km)\n\n   sigma \n4.357209 \n\n\n\nbw.scott(childcareSG_ppp_km)\n\n sigma.x  sigma.y \n2.159749 1.396455 \n\n\n\nbw.ppl(childcareSG_ppp_km)\n\n   sigma \n0.378997 \n\n\n\nbw.diggle(childcareSG_ppp_km)\n\n    sigma \n0.2959712 \n\n\n\nkde_childcareSG.ppl &lt;- density(childcareSG_ppp_km, \n                               sigma=bw.ppl, \n                               edge=TRUE,\n                               kernel=\"gaussian\")\npar(mfrow=c(1,2))\nplot(kde_childcareSG_km, main = \"bw.diggle\")\nplot(kde_childcareSG.ppl, main = \"bw.ppl\")\n\n\n\n\n\n\n\n\n\n\n\n\npar(mfrow=c(2,2))\nplot(density(childcareSG_ppp_km, \n             sigma=0.2959712, \n             edge=TRUE, \n             kernel=\"gaussian\"), \n     main=\"Gaussian\")\nplot(density(childcareSG_ppp_km, \n             sigma=0.2959712, \n             edge=TRUE, \n             kernel=\"epanechnikov\"), \n     main=\"Epanechnikov\")\nplot(density(childcareSG_ppp_km, \n             sigma=0.2959712, \n             edge=TRUE, \n             kernel=\"quartic\"), \n     main=\"Quartic\")\nplot(density(childcareSG_ppp_km, \n             sigma=0.2959712, \n             edge=TRUE, \n             kernel=\"disc\"), \n     main=\"Disc\")"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html",
+    "title": "Hands-on EX03",
+    "section": "",
+    "text": "A spatio-temporal point process (also called space-time or spatial-temporal point process) is a random collection of points, where each point represents the time and location of an event. The analysis of spatio-temporal point patterns is becoming increasingly necessary, given the rapid emergence of geographically and temporally indexed data in a wide range of fields."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#study-area",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#study-area",
+    "title": "Hands-on EX03",
+    "section": "Study Area",
+    "text": "Study Area\nUsing st_read i am going to importing the data or study area into our R Studio.\n\nkbb &lt;- st_read(dsn = \"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata\", layer = \"Kepulauan_Bangka_Belitung\")\n\nReading layer `Kepulauan_Bangka_Belitung' from data source \n  `K:\\kalpitkulshrestha24\\ISSS626\\Hands-on_Exercise\\Hands-on EX03\\data\\rawdata' \n  using driver `ESRI Shapefile'\nSimple feature collection with 297 features and 26 fields\nGeometry type: POLYGON\nDimension:     XYZ\nBounding box:  xmin: 105.1085 ymin: -3.116593 xmax: 106.8488 ymax: -1.501603\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\nkbb_sf &lt;- st_read(dsn=\"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata\",\n               layer = \"Kepulauan_Bangka_Belitung\") %&gt;%\n  st_union() %&gt;%\n  st_zm(drop = TRUE, what = \"ZM\") %&gt;%\n  st_transform(crs = 32748)\n\nReading layer `Kepulauan_Bangka_Belitung' from data source \n  `K:\\kalpitkulshrestha24\\ISSS626\\Hands-on_Exercise\\Hands-on EX03\\data\\rawdata' \n  using driver `ESRI Shapefile'\nSimple feature collection with 297 features and 26 fields\nGeometry type: POLYGON\nDimension:     XYZ\nBounding box:  xmin: 105.1085 ymin: -3.116593 xmax: 106.8488 ymax: -1.501603\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\nst_as_s2(): dropping Z and/or M coordinate"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#converting-owin",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#converting-owin",
+    "title": "Hands-on EX03",
+    "section": "Converting OWIN",
+    "text": "Converting OWIN\nusing as.owin() functino to convert kbb data into owin object.\n\nkbb_owin &lt;- as.owin(kbb_sf)\nkbb_owin\n\nwindow: polygonal boundary\nenclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units\n\n\n\nclass(kbb_owin)\n\n[1] \"owin\""
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/data/rawdata/Kepulauan_Bangka_Belitung.html",
+    "href": "Hands-on_Exercise/Hands-on EX03/data/rawdata/Kepulauan_Bangka_Belitung.html",
+    "title": "ISSS626",
+    "section": "",
+    "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     \n\n\n       GEOGCRS[“WGS 84”,ENSEMBLE[“World Geodetic System 1984 ensemble”,MEMBER[“World Geodetic System 1984 (Transit)”],MEMBER[“World Geodetic System 1984 (G730)”],MEMBER[“World Geodetic System 1984 (G873)”],MEMBER[“World Geodetic System 1984 (G1150)”],MEMBER[“World Geodetic System 1984 (G1674)”],MEMBER[“World Geodetic System 1984 (G1762)”],MEMBER[“World Geodetic System 1984 (G2139)”],MEMBER[“World Geodetic System 1984 (G2296)”],ELLIPSOID[“WGS 84”,6378137,298.257223563,LENGTHUNIT[“metre”,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[“Greenwich”,0,ANGLEUNIT[“degree”,0.0174532925199433]],CS[ellipsoidal,2],AXIS[“geodetic latitude (Lat)”,north,ORDER[1],ANGLEUNIT[“degree”,0.0174532925199433]],AXIS[“geodetic longitude (Lon)”,east,ORDER[2],ANGLEUNIT[“degree”,0.0174532925199433]],USAGE[SCOPE[“Horizontal component of 3D system.”],AREA[“World.”],BBOX[-90,-180,90,180]],ID[“EPSG”,4326]] +proj=longlat +datum=WGS84 +no_defs 3452 4326 EPSG:4326 WGS 84 longlat EPSG:7030 true"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#overall-plot",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#overall-plot",
+    "title": "Hands-on EX03",
+    "section": "Overall plot",
+    "text": "Overall plot\n\ntm_shape(kbb_sf)+\n  tm_polygons() +\ntm_shape(fire_sf) +\n  tm_dots()\n\n\n\n\n\n\n\n\ntm_shape(shp = NULL, bbox = NULL, crs = NULL, is.main = NA, name = NULL, unit = NULL, filter = NULL, …) Shape (spatial object) specification Specify a shape, which is a spatial object from one of these spatial object class packages: sf, stars, or terra.\nMap layer: polygons Map layer that draws polygons. Supported visual variables are: fill (the fill color), col (the border color), lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency).\nMap layer: symbols Map layer that draws symbols Supported visual variables are: fill (the fill color), col (the border color), size the symbol size, shape the symbol shape, lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency)"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#visualising-geogrpahic-distrbution-of-forest-fires-by-month",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#visualising-geogrpahic-distrbution-of-forest-fires-by-month",
+    "title": "Hands-on EX03",
+    "section": "Visualising geogrpahic distrbution of forest fires by month",
+    "text": "Visualising geogrpahic distrbution of forest fires by month\n\ntm_shape(kbb_sf)+\n  tm_polygons() +\ntm_shape(fire_sf) +\n  tm_dots(size = 0.1) +\ntm_facets(by=\"Month_fac\", \n            free.coords=FALSE, \n            drop.units = TRUE)"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#extracting-forest-fires-by-month",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#extracting-forest-fires-by-month",
+    "title": "Hands-on EX03",
+    "section": "Extracting forest fires by month",
+    "text": "Extracting forest fires by month\nThe code chunk below is used to remove the unwanted fields from fire_sf sf data.frame. This is because as.ppp() only need the mark field and geometry field from the input sf data.frame.\n\nfire_month &lt;- fire_sf %&gt;%\n  select(Month_num)"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#creating-ppp",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#creating-ppp",
+    "title": "Hands-on EX03",
+    "section": "Creating ppp",
+    "text": "Creating ppp\n\nfire_month_ppp &lt;- as.ppp(fire_month)\nfire_month_ppp\n\nMarked planar point pattern: 741 points\nmarks are numeric, of storage type  'double'\nwindow: rectangle = [521564.1, 695791] x [9658137, 9828767] units\n\n\n\nsummary(fire_month_ppp)\n\nMarked planar point pattern:  741 points\nAverage intensity 2.49258e-08 points per square unit\n\nCoordinates are given to 10 decimal places\n\nmarks are numeric, of type 'double'\nSummary:\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.000   8.000   9.000   8.579  10.000  12.000 \n\nWindow: rectangle = [521564.1, 695791] x [9658137, 9828767] units\n                    (174200 x 170600 units)\nWindow area = 29728200000 square units\n\n\n\nany(duplicated(fire_month_ppp))\n\n[1] FALSE\n\n\nAbove chunk of code we found that their is no duplicate point of events in the data."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#including-owin-object",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#including-owin-object",
+    "title": "Hands-on EX03",
+    "section": "Including Owin object",
+    "text": "Including Owin object\n\nfire_month_owin &lt;- fire_month_ppp[kbb_owin]\nsummary(fire_month_owin)\n\nMarked planar point pattern:  741 points\nAverage intensity 6.42469e-08 points per square unit\n\nCoordinates are given to 10 decimal places\n\nmarks are numeric, of type 'double'\nSummary:\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.000   8.000   9.000   8.579  10.000  12.000 \n\nWindow: polygonal boundary\nsingle connected closed polygon with 47493 vertices\nenclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units\n                     (193500 x 178600 units)\nWindow area = 11533600000 square units\nFraction of frame area: 0.334\n\n\n\nplot(fire_month_owin)"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#computing-spatio-temporal-kde",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#computing-spatio-temporal-kde",
+    "title": "Hands-on EX03",
+    "section": "Computing Spatio-temporal KDE",
+    "text": "Computing Spatio-temporal KDE\n\nst_kde &lt;- spattemp.density(fire_month_owin)\n\nCalculating trivariate smooth...Done.\nEdge-correcting...Done.\nConditioning on time...Done.\n\nsummary(st_kde)\n\nSpatiotemporal Kernel Density Estimate\n\nBandwidths\n  h = 15102.47 (spatial)\n  lambda = 0.0304 (temporal)\n\nNo. of observations\n  741 \n\nSpatial bound\n  Type: polygonal\n  2D enclosure: [512066.8, 705559.4] x [9655398, 9834006]\n\nTemporal bound\n  [1, 12]\n\nEvaluation\n  128 x 128 x 12 trivariate lattice\n  Density range: [1.233458e-27, 8.202976e-10]"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#plotting-the-spatio-temporal-kde-object",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#plotting-the-spatio-temporal-kde-object",
+    "title": "Hands-on EX03",
+    "section": "Plotting the spatio-temporal KDE object",
+    "text": "Plotting the spatio-temporal KDE object\n\ntims &lt;- c(7,8,9,10,11,12)\npar(mfcol=c(2,3))\nfor (i in tims) {\n  plot(st_kde,i,\n       override.par=FALSE,\n       fix.range=TRUE,\n       main=paste(\"KDE at month\",i))\n}\n\n\n\n\n\n\n\n\nSet or Query Graphical Parameters par can be used to set or query graphical parameters. Parameters can be set by specifying them as arguments to par in tag = value form, or by passing them as a list of tagged values."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#creating-ppp-object",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#creating-ppp-object",
+    "title": "Hands-on EX03",
+    "section": "Creating ppp object",
+    "text": "Creating ppp object\n\nfire_yday_ppp &lt;- fire_sf %&gt;% \n  select(DayofYear) %&gt;%\n  as.ppp()"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#including-owin-object-1",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#including-owin-object-1",
+    "title": "Hands-on EX03",
+    "section": "Including owin object",
+    "text": "Including owin object\n\nfire_yday_owin &lt;- fire_yday_ppp[kbb_owin]\nsummary(fire_yday_owin)\n\nMarked planar point pattern:  741 points\nAverage intensity 6.42469e-08 points per square unit\n\nCoordinates are given to 10 decimal places\n\nmarks are numeric, of type 'double'\nSummary:\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n   10.0   213.0   258.0   245.9   287.0   352.0 \n\nWindow: polygonal boundary\nsingle connected closed polygon with 47493 vertices\nenclosing rectangle: [512066.8, 705559.4] x [9655398, 9834006] units\n                     (193500 x 178600 units)\nWindow area = 11533600000 square units\nFraction of frame area: 0.334"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#computing-spatio-temoral-density",
+    "href": "Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html#computing-spatio-temoral-density",
+    "title": "Hands-on EX03",
+    "section": "Computing spatio-temoral density",
+    "text": "Computing spatio-temoral density\n\nkde_yday &lt;- spattemp.density(\n  fire_yday_owin)\n\nCalculating trivariate smooth...Done.\nEdge-correcting...Done.\nConditioning on time...Done.\n\nsummary(kde_yday)\n\nSpatiotemporal Kernel Density Estimate\n\nBandwidths\n  h = 15102.47 (spatial)\n  lambda = 6.3198 (temporal)\n\nNo. of observations\n  741 \n\nSpatial bound\n  Type: polygonal\n  2D enclosure: [512066.8, 705559.4] x [9655398, 9834006]\n\nTemporal bound\n  [10, 352]\n\nEvaluation\n  128 x 128 x 343 trivariate lattice\n  Density range: [3.959516e-27, 2.751287e-12]\n\n\n\nplot(kde_yday)"
   }
 ]

@@ -1,0 +1,246 @@
+---
+title: "Hands-on EX03"
+author: "Kalpit Kulshrestha"
+date: "September 11, 2025"
+date-modified: "September 11, 2025"
+---
+
+# Spatio_temporal Point Pattern Analysis
+
+A spatio-temporal point process (also called space-time or spatial-temporal point process) is a random collection of points, where each point represents the time and location of an event. The analysis of spatio-temporal point patterns is becoming increasingly necessary, given the rapid emergence of geographically and temporally indexed data in a wide range of fields.
+
+# The Data
+
+Their are two dataset, which we will be using *forestfires* and *Kepulauan_Bangka_Belitung* data.
+
+-   THe *forestfires* data is a csv file which provides location of forest fire detection from Moderate resoultion Imaging Spectroradiometer sensor data (MODIS).
+
+-   *Kepulauan_Bangka_Belitung*, an ESRI shapefile showing the sub-district boundary of Kepulauan Bangka Belitung
+
+
+# Installing and loading the pacckages
+
+```{r}
+pacman::p_load(sf, terra, spatstat, sparr, tmap, tidyverse)
+```
+
+# Importing and Preparing Study area
+
+## Study Area
+
+Using st_read i am going to importing the data or study area into our R Studio.
+
+```{r}
+kbb <- st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata", layer = "Kepulauan_Bangka_Belitung")
+```
+```{r}
+kbb_sf <- st_read(dsn="K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata",
+               layer = "Kepulauan_Bangka_Belitung") %>%
+  st_union() %>%
+  st_zm(drop = TRUE, what = "ZM") %>%
+  st_transform(crs = 32748)
+```
+## Converting OWIN
+
+using as.owin() functino to convert kbb data into owin object.
+
+```{r}
+kbb_owin <- as.owin(kbb_sf)
+kbb_owin
+```
+```{r}
+class(kbb_owin)
+```
+# Importing and preparing forest fire data
+
+Now, we are importing and reading the forest fires data into R environment.
+using *st_as_sf* we are converting foreign object into sf object
+using *coords* we extracting or changing the spatial or spatial temporal point pattern.
+then we transform the projection using *crs*.
+
+```{r}
+fire_sf <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/forestfires.csv") %>%
+  st_as_sf(coords = c("longitude", "latitude"),
+                       crs = 4326) %>%
+  st_transform(crs = 32748)
+```
+
+
+now, we convert the data type of the acq_date to numeric.
+```{r}
+fire_sf <- fire_sf %>%
+  mutate(DayofYear = yday(acq_date)) %>%
+  mutate(Month_num = month(acq_date)) %>%
+  mutate(Month_fac = month(acq_date,
+                           label = TRUE, 
+                           abbr = FALSE))
+```
+
+mutate(.data, ...)
+Create, modify, and delete columns
+mutate() creates new columns that are functions of existing variables. It can also modify (if the name is the same as an existing column) and delete columns (by setting their value to NULL).
+
+yday(x)
+Get/set days component of a date-time
+Get/set days component of a date-time
+
+month(x, label = FALSE, abbr = TRUE, locale = Sys.getlocale("LC_TIME"))
+Get/set months component of a date-time
+Date-time must be a POSIXct, POSIXlt, Date, Period, chron, yearmon, yearqtr, zoo, zooreg, timeDate, xts, its, ti, jul, timeSeries, and fts objects.
+
+# Visualization the fire point
+plotting the fire event on our study area. 
+
+## Overall plot
+
+```{r}
+tm_shape(kbb_sf)+
+  tm_polygons() +
+tm_shape(fire_sf) +
+  tm_dots()
+```
+
+tm_shape(shp = NULL, bbox = NULL, crs = NULL, is.main = NA, name = NULL, unit = NULL, filter = NULL, ...)
+Shape (spatial object) specification
+Specify a shape, which is a spatial object from one of these spatial object class packages: sf, stars, or terra.
+
+Map layer: polygons
+Map layer that draws polygons. Supported visual variables are: fill (the fill color), col (the border color), lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency).
+
+
+Map layer: symbols
+Map layer that draws symbols Supported visual variables are: fill (the fill color), col (the border color), size the symbol size, shape the symbol shape, lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency)
+
+## Visualising geogrpahic distrbution of forest fires by month
+```{r}
+tm_shape(kbb_sf)+
+  tm_polygons() +
+tm_shape(fire_sf) +
+  tm_dots(size = 0.1) +
+tm_facets(by="Month_fac", 
+            free.coords=FALSE, 
+            drop.units = TRUE)
+```
+
+# Computing STKDE by month
+
+In this section, i am learning how to compute STKDE by using *spattemp.density()* function of sprr package. 
+
+## Extracting forest fires by month
+The code chunk below is used to remove the unwanted fields from fire_sf sf data.frame. This is because as.ppp() only need the mark field and geometry field from the input sf data.frame.
+
+```{r}
+fire_month <- fire_sf %>%
+  select(Month_num)
+```
+
+## Creating ppp
+```{r}
+fire_month_ppp <- as.ppp(fire_month)
+fire_month_ppp
+```
+```{r}
+summary(fire_month_ppp)
+```
+```{r}
+any(duplicated(fire_month_ppp))
+```
+Above chunk of code we found that their is no duplicate point of events in the data.
+
+## Including Owin object
+
+```{r}
+fire_month_owin <- fire_month_ppp[kbb_owin]
+summary(fire_month_owin)
+```
+```{r}
+plot(fire_month_owin)
+```
+## Computing Spatio-temporal KDE
+
+```{r}
+st_kde <- spattemp.density(fire_month_owin)
+summary(st_kde)
+```
+## Plotting the spatio-temporal KDE object
+
+```{r}
+tims <- c(7,8,9,10,11,12)
+par(mfcol=c(2,3))
+for (i in tims) {
+  plot(st_kde,i,
+       override.par=FALSE,
+       fix.range=TRUE,
+       main=paste("KDE at month",i))
+}
+```
+
+Set or Query Graphical Parameters
+par can be used to set or query graphical parameters. Parameters can be set by specifying them as arguments to par in tag = value form, or by passing them as a list of tagged values.
+
+# Computing STKDE by Day of Year
+
+## Creating ppp object
+
+```{r}
+fire_yday_ppp <- fire_sf %>% 
+  select(DayofYear) %>%
+  as.ppp()
+```
+
+## Including owin object
+```{r}
+fire_yday_owin <- fire_yday_ppp[kbb_owin]
+summary(fire_yday_owin)
+```
+
+## Computing spatio-temoral density
+
+```{r}
+kde_yday <- spattemp.density(
+  fire_yday_owin)
+summary(kde_yday)
+```
+```{r}
+plot(kde_yday)
+```
+
+# Computing STKDE by Day of Year: Improved method
+
+One of the nice function provides in sparr package is *BOOT.spattemp()*. It support bandwidth selection for standalone spatiotemporal density/intensity based on bootstrap estimation of the MISE, providing an isotropic scalar spatial bandwidth and a scalar temporal bandwidth.
+
+Code chunk below uses *BOOT.spattemp()* to determine both the spatial bandwidth and the scalar temporal bandwidth.
+
+```{r}
+set.seed(1234)
+BOOT.spattemp(fire_yday_owin) 
+```
+
+
+```{r}
+kde_yday <- spattemp.density(fire_yday_owin,
+                             h = 9000,
+                             lambda = 19)
+summary(kde_yday)
+```
+
+```{r}
+plot(kde_yday)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
