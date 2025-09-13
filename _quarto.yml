@@ -7,9 +7,13 @@ website:
     background: secondary
     search: true
     left: 
+      - text: "In-Class Exercise"
+        menu: 
+          - text: "In-class Exercise 03"
+            href: "In-class Exercise/In-class Exercise 3/In-class_Ex03a.html"
       - text: "Take Home Exercise"
         menu: 
-          - text: "Take Home Exercise 01"
+          - text: "Take Home Exercise 1"
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"

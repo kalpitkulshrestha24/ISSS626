@@ -1,8 +1,6 @@
 ---
 title: "Hands-on EX03"
 author: "Kalpit Kulshrestha"
-date: "September 11, 2025"
-date-modified: "September 11, 2025"
 ---
 
 # Spatio_temporal Point Pattern Analysis
@@ -16,7 +14,6 @@ Their are two dataset, which we will be using *forestfires* and *Kepulauan_Bangk
 -   THe *forestfires* data is a csv file which provides location of forest fire detection from Moderate resoultion Imaging Spectroradiometer sensor data (MODIS).
 
 -   *Kepulauan_Bangka_Belitung*, an ESRI shapefile showing the sub-district boundary of Kepulauan Bangka Belitung
-
 
 # Installing and loading the pacckages
 
@@ -33,6 +30,7 @@ Using st_read i am going to importing the data or study area into our R Studio.
 ```{r}
 kbb <- st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata", layer = "Kepulauan_Bangka_Belitung")
 ```
+
 ```{r}
 kbb_sf <- st_read(dsn="K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/rawdata",
                layer = "Kepulauan_Bangka_Belitung") %>%
@@ -40,6 +38,7 @@ kbb_sf <- st_read(dsn="K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on
   st_zm(drop = TRUE, what = "ZM") %>%
   st_transform(crs = 32748)
 ```
+
 ## Converting OWIN
 
 using as.owin() functino to convert kbb data into owin object.
@@ -48,15 +47,14 @@ using as.owin() functino to convert kbb data into owin object.
 kbb_owin <- as.owin(kbb_sf)
 kbb_owin
 ```
+
 ```{r}
 class(kbb_owin)
 ```
+
 # Importing and preparing forest fire data
 
-Now, we are importing and reading the forest fires data into R environment.
-using *st_as_sf* we are converting foreign object into sf object
-using *coords* we extracting or changing the spatial or spatial temporal point pattern.
-then we transform the projection using *crs*.
+Now, we are importing and reading the forest fires data into R environment. using *st_as_sf* we are converting foreign object into sf object using *coords* we extracting or changing the spatial or spatial temporal point pattern. then we transform the projection using *crs*.
 
 ```{r}
 fire_sf <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX03/data/forestfires.csv") %>%
@@ -65,8 +63,8 @@ fire_sf <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on E
   st_transform(crs = 32748)
 ```
 
-
 now, we convert the data type of the acq_date to numeric.
+
 ```{r}
 fire_sf <- fire_sf %>%
   mutate(DayofYear = yday(acq_date)) %>%
@@ -76,20 +74,15 @@ fire_sf <- fire_sf %>%
                            abbr = FALSE))
 ```
 
-mutate(.data, ...)
-Create, modify, and delete columns
-mutate() creates new columns that are functions of existing variables. It can also modify (if the name is the same as an existing column) and delete columns (by setting their value to NULL).
+mutate(.data, ...) Create, modify, and delete columns mutate() creates new columns that are functions of existing variables. It can also modify (if the name is the same as an existing column) and delete columns (by setting their value to NULL).
 
-yday(x)
-Get/set days component of a date-time
-Get/set days component of a date-time
+yday(x) Get/set days component of a date-time Get/set days component of a date-time
 
-month(x, label = FALSE, abbr = TRUE, locale = Sys.getlocale("LC_TIME"))
-Get/set months component of a date-time
-Date-time must be a POSIXct, POSIXlt, Date, Period, chron, yearmon, yearqtr, zoo, zooreg, timeDate, xts, its, ti, jul, timeSeries, and fts objects.
+month(x, label = FALSE, abbr = TRUE, locale = Sys.getlocale("LC_TIME")) Get/set months component of a date-time Date-time must be a POSIXct, POSIXlt, Date, Period, chron, yearmon, yearqtr, zoo, zooreg, timeDate, xts, its, ti, jul, timeSeries, and fts objects.
 
 # Visualization the fire point
-plotting the fire event on our study area. 
+
+plotting the fire event on our study area.
 
 ## Overall plot
 
@@ -100,18 +93,14 @@ tm_shape(fire_sf) +
   tm_dots()
 ```
 
-tm_shape(shp = NULL, bbox = NULL, crs = NULL, is.main = NA, name = NULL, unit = NULL, filter = NULL, ...)
-Shape (spatial object) specification
-Specify a shape, which is a spatial object from one of these spatial object class packages: sf, stars, or terra.
+tm_shape(shp = NULL, bbox = NULL, crs = NULL, is.main = NA, name = NULL, unit = NULL, filter = NULL, ...) Shape (spatial object) specification Specify a shape, which is a spatial object from one of these spatial object class packages: sf, stars, or terra.
 
-Map layer: polygons
-Map layer that draws polygons. Supported visual variables are: fill (the fill color), col (the border color), lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency).
+Map layer: polygons Map layer that draws polygons. Supported visual variables are: fill (the fill color), col (the border color), lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency).
 
-
-Map layer: symbols
-Map layer that draws symbols Supported visual variables are: fill (the fill color), col (the border color), size the symbol size, shape the symbol shape, lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency)
+Map layer: symbols Map layer that draws symbols Supported visual variables are: fill (the fill color), col (the border color), size the symbol size, shape the symbol shape, lwd (line width), lty (line type), fill_alpha (fill color alpha transparency) and col_alpha (border color alpha transparency)
 
 ## Visualising geogrpahic distrbution of forest fires by month
+
 ```{r}
 tm_shape(kbb_sf)+
   tm_polygons() +
@@ -124,9 +113,10 @@ tm_facets(by="Month_fac",
 
 # Computing STKDE by month
 
-In this section, i am learning how to compute STKDE by using *spattemp.density()* function of sprr package. 
+In this section, i am learning how to compute STKDE by using *spattemp.density()* function of sprr package.
 
 ## Extracting forest fires by month
+
 The code chunk below is used to remove the unwanted fields from fire_sf sf data.frame. This is because as.ppp() only need the mark field and geometry field from the input sf data.frame.
 
 ```{r}
@@ -135,16 +125,20 @@ fire_month <- fire_sf %>%
 ```
 
 ## Creating ppp
+
 ```{r}
 fire_month_ppp <- as.ppp(fire_month)
 fire_month_ppp
 ```
+
 ```{r}
 summary(fire_month_ppp)
 ```
+
 ```{r}
 any(duplicated(fire_month_ppp))
 ```
+
 Above chunk of code we found that their is no duplicate point of events in the data.
 
 ## Including Owin object
@@ -153,15 +147,18 @@ Above chunk of code we found that their is no duplicate point of events in the d
 fire_month_owin <- fire_month_ppp[kbb_owin]
 summary(fire_month_owin)
 ```
+
 ```{r}
 plot(fire_month_owin)
 ```
+
 ## Computing Spatio-temporal KDE
 
 ```{r}
 st_kde <- spattemp.density(fire_month_owin)
 summary(st_kde)
 ```
+
 ## Plotting the spatio-temporal KDE object
 
 ```{r}
@@ -175,8 +172,7 @@ for (i in tims) {
 }
 ```
 
-Set or Query Graphical Parameters
-par can be used to set or query graphical parameters. Parameters can be set by specifying them as arguments to par in tag = value form, or by passing them as a list of tagged values.
+Set or Query Graphical Parameters par can be used to set or query graphical parameters. Parameters can be set by specifying them as arguments to par in tag = value form, or by passing them as a list of tagged values.
 
 # Computing STKDE by Day of Year
 
@@ -189,6 +185,7 @@ fire_yday_ppp <- fire_sf %>%
 ```
 
 ## Including owin object
+
 ```{r}
 fire_yday_owin <- fire_yday_ppp[kbb_owin]
 summary(fire_yday_owin)
@@ -201,6 +198,7 @@ kde_yday <- spattemp.density(
   fire_yday_owin)
 summary(kde_yday)
 ```
+
 ```{r}
 plot(kde_yday)
 ```
@@ -216,7 +214,6 @@ set.seed(1234)
 BOOT.spattemp(fire_yday_owin) 
 ```
 
-
 ```{r}
 kde_yday <- spattemp.density(fire_yday_owin,
                              h = 9000,
@@ -227,20 +224,3 @@ summary(kde_yday)
 ```{r}
 plot(kde_yday)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

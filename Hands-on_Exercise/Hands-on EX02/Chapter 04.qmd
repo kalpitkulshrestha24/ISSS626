@@ -155,8 +155,8 @@ The 95% confident interval will be used.
 ```{r}
 clarkevans.test(childcareSG_ppp, correction = "none", clipregion = "sg_owin", alternative = c("clustered"))
 ```
-Statistical Conclusion:
 
+Statistical Conclusion:
 
 Business Insights from above analysis:
 
@@ -170,6 +170,7 @@ clarkevans.test(childcareSG_ppp,
                 method="MonteCarlo",
                 nsim=99)
 ```
+
 Statistical Conclusion:
 
 Business Insights:
@@ -189,16 +190,20 @@ kde_SG_diggle <- density(
 ```{r}
 plot(kde_SG_diggle)
 ```
+
 ```{r}
 summary(kde_SG_diggle)
 ```
+
 we are retrieving the bandwidth which used to compute the kde layer.
 
 ```{r}
 bw <- bw.diggle(childcareSG_ppp)
 bw
 ```
+
 ### Rescalling KDE values
+
 ```{r}
 childcareSG_ppp_km <- rescale.ppp(
   childcareSG_ppp, 1000, "km")
@@ -214,6 +219,7 @@ kde_childcareSG_km <- density(childcareSG_ppp_km,
 ```{r}
 plot(kde_childcareSG_km)
 ```
+
 ### working with different automatic bandwidth methods
 
 ```{r}
@@ -223,6 +229,7 @@ bw.CvL(childcareSG_ppp_km)
 ```{r}
 bw.scott(childcareSG_ppp_km)
 ```
+
 ```{r}
 bw.ppl(childcareSG_ppp_km)
 ```
@@ -240,7 +247,8 @@ par(mfrow=c(1,2))
 plot(kde_childcareSG_km, main = "bw.diggle")
 plot(kde_childcareSG.ppl, main = "bw.ppl")
 ```
-### Workinf with differnet kernel methods
+
+### Working with differnet kernel methods
 
 ```{r}
 par(mfrow=c(2,2))
@@ -265,6 +273,149 @@ plot(density(childcareSG_ppp_km,
              kernel="disc"), 
      main="Disc")
 ```
+
+# Fixed and adaptive KDE
+
+## Computing KDE bu using fixed bandwidth
+We will compute a KDE layer by defining a bandwidth of 600 meter. Notice that in the code chunk below, the sigma value used is 0.6. This is because the unit of measurement of childcareSG_ppp_km object is in kilometer, hence the 600m is 0.6km.
+
+```{r}
+kde_childcareSG_fb <- density(childcareSG_ppp_km,
+                              sigma=0.6, 
+                              edge=TRUE,
+                              kernel="gaussian")
+plot(kde_childcareSG_fb)
+```
+## Computing KDE by using adaptive bandwidth
+
+Fixed bandwidth method is very sensitive to highly skew distribution of spatial point patterns over geographical units for example urban versus rural. One way to overcome this problem is by using adaptive bandwidth instead.
+
+In this section, you will learn how to derive adaptive kernel density estimation by using density.adaptive() of spatstat.
+
+```{r}
+kde_childcareSG_ab <- adaptive.density(
+  childcareSG_ppp_km, 
+  method="kernel")
+plot(kde_childcareSG_ab)
+```
+Now, comparing both KDE fixed and adaptive.
+
+```{r}
+par(mfrow=c(1,2))
+plot(kde_childcareSG_fb, main = "Fixed bandwidth")
+plot(kde_childcareSG_ab, main = "Adaptive bandwidth")
+```
+# Plotting cartographic quality KDE map
+
+## Converting gridded output into raster
+```{r}
+kde_childcareSG_bw_terra <- rast(kde_childcareSG_km)
+```
+
+```{r}
+class(kde_childcareSG_bw_terra)
+```
+```{r}
+kde_childcareSG_bw_terra
+```
+## Assigning projection systems
+```{r}
+crs(kde_childcareSG_bw_terra) <- "EPSG:3414"
+```
+
+```{r}
+kde_childcareSG_bw_terra
+```
+##  Plotting KDE map with tmap
+
+```{r}
+tm_shape(kde_childcareSG_bw_terra) + 
+  tm_raster(col.scale = 
+              tm_scale_continuous(
+                values = "viridis"),
+            col.legend = tm_legend(
+            title = "Density values",
+            title.size = 0.7,
+            text.size = 0.7,
+            bg.color = "white",
+            bg.alpha = 0.7,
+            position = tm_pos_in(
+              "right", "bottom"),
+            frame = TRUE)) +
+  tm_graticules(labels.size = 0.7) +
+  tm_compass() +
+  tm_layout(scale = 1.0)
+```
+
+
+
+# First Order SPPA at the Planning Subzone Level
+
+## Geospatial data wrangling
+
+### Extracting Study area
+```{r}
+pg <- mpsz_cl %>%
+  filter(PLN_AREA_N == "PUNGGOL")
+tm <- mpsz_cl %>%
+  filter(PLN_AREA_N == "TAMPINES")
+ck <- mpsz_cl %>%
+  filter(PLN_AREA_N == "CHOA CHU KANG")
+jw <- mpsz_cl %>%
+  filter(PLN_AREA_N == "JURONG WEST")
+```
+
+```{r}
+par(mfrow=c(1,1))
+plot(st_geometry(pg), main = "Ponggol")
+plot(st_geometry(tm), main = "Tampines")
+plot(st_geometry(ck), main = "Choa Chu Kang")
+plot(st_geometry(jw), main = "Jurong West")
+```
+### Creating OWIN Object
+```{r}
+pg_owin = as.owin(pg)
+tm_owin = as.owin(tm)
+ck_owin = as.owin(ck)
+jw_owin = as.owin(jw)
+```
+
+### Combining point events object and owin object
+```{r}
+childcare_pg_ppp = childcare_ppp[pg_owin]
+childcare_tm_ppp = childcare_ppp[tm_owin]
+childcare_ck_ppp = childcare_ppp[ck_owin]
+childcare_jw_ppp = childcare_ppp[jw_owin]
+```
+
+```{r}
+childcare_pg_ppp.km = rescale.ppp(childcare_pg_ppp, 1000, "km")
+childcare_tm_ppp.km = rescale.ppp(childcare_tm_ppp, 1000, "km")
+childcare_ck_ppp.km = rescale.ppp(childcare_ck_ppp, 1000, "km")
+childcare_jw_ppp.km = rescale.ppp(childcare_jw_ppp, 1000, "km")
+```
+
+```{r}
+par(mfrow=c(1,1))
+plot(unmark(childcare_pg_ppp.km), 
+  main="Punggol")
+plot(unmark(childcare_tm_ppp.km), 
+  main="Tampines")
+plot(unmark(childcare_ck_ppp.km), 
+  main="Choa Chu Kang")
+plot(unmark(childcare_jw_ppp.km), 
+  main="Jurong West")
+```
+## Clark and EVans Test
+```{r}
+
+
+
+
+
+
+
+
 
 
 
