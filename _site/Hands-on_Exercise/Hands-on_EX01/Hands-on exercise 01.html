@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Kalpit">
+<meta name="author" content="Kalpit Kulshrestha">
 
 <title>Hands-on Exercise 01A – ISSS626</title>
 <style>
@@ -129,14 +129,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-Class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 3/In-class_Ex03a.html">
+ <span class="dropdown-text">In-class Exercise 03</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Take Home Exercise</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
-        <li>
-    <a class="dropdown-item" href="K:/kalpitkulshrestha24/ISSS626/_site/In-class Exercise/In-class Exercise 3/In-class_Ex03a.html">
- <span class="dropdown-text">Take Home Exercise 01</span></a>
-  </li>  
+        <li class="dropdown-header">Take Home Exercise 1</li>
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -198,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#geospatial-data-science-with-r" id="toc-geospatial-data-science-with-r" class="nav-link active" data-scroll-target="#geospatial-data-science-with-r">Geospatial Data Science with R</a>
+  <li><a href="#geospatial-data-wrangling-with-r" id="toc-geospatial-data-wrangling-with-r" class="nav-link active" data-scroll-target="#geospatial-data-wrangling-with-r">Geospatial Data Wrangling with R</a>
   <ul class="collapse">
   <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">Importing the data</a>
   <ul class="collapse">
@@ -243,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Kalpit </p>
+             <p>Kalpit Kulshrestha </p>
           </div>
   </div>
     
@@ -256,8 +264,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="geospatial-data-science-with-r" class="level1">
-<h1>Geospatial Data Science with R</h1>
+<section id="geospatial-data-wrangling-with-r" class="level1">
+<h1>Geospatial Data Wrangling with R</h1>
 <p>Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, you will learn how to perform geospatial data science tasks in R by using sf package.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

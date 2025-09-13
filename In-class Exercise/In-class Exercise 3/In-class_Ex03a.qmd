@@ -1,7 +1,7 @@
 ---
 title: "In-class Exercise 3: Interactive K-function"
-author: "Dr. Kam Tin Seong"
-date: "September 12, 2025"
+author: "Kalpit kulshrestha"
+date: "September 13, 2025"
 date-modified: "last-modified"
 execute: 
   eval: true
