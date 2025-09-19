@@ -13,7 +13,8 @@ website:
             href: "In-class Exercise/In-class Exercise 3/In-class_Ex03a.html"
       - text: "Take Home Exercise"
         menu: 
-          - text: "Take Home Exercise 1"
+          - text: "Take Home Exercise 3A"
+            href: "Take Home Exercise/Take-Home Exercise 3/Take-Home EXercise 3A.html"
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"
