@@ -2,4 +2,3 @@
 title: "Take-Home Exercise 1"
 author: "Kalpit Kulshrestha"
 ---
-
