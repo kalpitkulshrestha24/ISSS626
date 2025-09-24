@@ -65,12 +65,12 @@ From the output above, we can observe that there are **53 columns** in this data
 we chek for null or blank values
 
 ```{r}
-null_count <- sapply(section_E, function(x) sum(is.na(x)))
-null_count
+null_count_E <- sapply(section_E, function(x) sum(is.na(x)))
+null_count_E
 ```
 
 ```{r}
-data.frame(Column = names(null_count), Null_Count = null_count)
+data.frame(Column = names(null_count_E), Null_Count = null_count_E)
 ```
 as we can see their are only 4 columns which has null values which is only 1 to 3 values is missing.
 
@@ -91,12 +91,12 @@ section_G
 we chek for null or blank values
 
 ```{r}
-null_count <- sapply(section_G, function(x) sum(is.na(x)))
-null_count
+null_count_G <- sapply(section_G, function(x) sum(is.na(x)))
+null_count_G
 ```
 
 ```{r}
-data.frame(Column = names(null_count), Null_Count = null_count)
+data.frame(Column = names(null_count_G), Null_Count = null_count_G)
 ```
 as we can see their are only 2 columns which has null values which is only 1 & 2 values missing.
 
@@ -114,4 +114,88 @@ There are **no exact duplicates** in this dataset.
 
 ```{r}
 section_H <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv")
+section_H
 ```
+
+we chek for null or blank values
+
+```{r}
+null_count_H <- sapply(section_H, function(x) sum(is.na(x)))
+null_count_H
+```
+
+```{r}
+data.frame(Column = names(null_count_H), Null_Count = null_count_H)
+```
+as we can see their are only 4 columns which has null values which is only 1 to 3 values is missing.
+
+```{r}
+duplicate_count <- sum(duplicated(section_E))
+duplicate_count
+```
+There are **no exact duplicates** in this dataset.
+
+# Extracting Selected Business
+Extracting the selected Business registered between **1st January 2024 to 30th June 2025.**
+
+```{r}
+section_E$registration_incorporation_date <- as.Date(section_E$registration_incorporation_date, format="%Y-%m-%d")
+```
+**Defining date range**
+```{r}
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2025-06-30")
+```
+**Extracting the date form the section E business.**
+```{r}
+E_df <- subset(section_E, registration_incorporation_date >= start_date & registration_incorporation_date <= end_date)
+E_df
+```
+**Extracting the date form the section G business.**
+```{r}
+G_df <- subset(section_G, registration_incorporation_date >= start_date & registration_incorporation_date <= end_date)
+G_df
+```
+**Extracting the date form the section H business.**
+```{r}
+H_df <- subset(section_H, registration_incorporation_date >= start_date & registration_incorporation_date <= end_date)
+H_df
+```
+
+# Geocoding and converting spatial point features.
+
+```{r}
+selected <- E_df %>%
+  mutate(full_address = str_squish(paste(Address, PostalCode, "Singapore", sep = ", ")))
+
+# ---- 4) Geocode (free, no API key) ----
+# rate_limit = TRUE plays nice with the OSM service
+# limit = 1 returns the best match; you can set 'full_results = TRUE' if you want extra columns
+geocoded <- selected %>%
+  geocode(address = full_address,
+          method = "osm",
+          lat = latitude, long = longitude,
+          limit = 1,
+          cascade = TRUE,
+          full_results = FALSE,
+          mode = "single",
+          verbose = TRUE)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

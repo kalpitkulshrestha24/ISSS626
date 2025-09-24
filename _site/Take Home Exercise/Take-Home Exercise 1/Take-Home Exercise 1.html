@@ -242,6 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#wholesale-data" id="toc-wholesale-data" class="nav-link" data-scroll-target="#wholesale-data">Wholesale data</a></li>
   <li><a href="#transport-data" id="toc-transport-data" class="nav-link" data-scroll-target="#transport-data">Transport data</a></li>
   </ul></li>
+  <li><a href="#extracting-selected-business" id="toc-extracting-selected-business" class="nav-link" data-scroll-target="#extracting-selected-business">Extracting Selected Business</a></li>
   </ul>
 </nav>
     </div>
@@ -409,8 +410,8 @@ date  (2): registration_incorporation_date, uen_issue_date
 <p>From the output above, we can observe that there are <strong>53 columns</strong> in this dataset and there are <strong>83,190 rows</strong> in this dataset.</p>
 <p>we chek for null or blank values</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>null_count <span class="ot">&lt;-</span> <span class="fu">sapply</span>(section_E, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>null_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>null_count_E <span class="ot">&lt;-</span> <span class="fu">sapply</span>(section_E, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>null_count_E</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                              uen                issuance_agency_id 
                                 0                                 0 
@@ -469,7 +470,7 @@ secondary_user_described_activity                    no_of_officers
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(null_count), <span class="at">Null_Count =</span> null_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(null_count_E), <span class="at">Null_Count =</span> null_count_E)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                             Column Null_Count
 uen                                                             uen          0
@@ -576,11 +577,140 @@ date  (2): registration_incorporation_date, uen_issue_date
 #   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …</code></pre>
 </div>
 </div>
+<p>we chek for null or blank values</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>null_count_G <span class="ot">&lt;-</span> <span class="fu">sapply</span>(section_G, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>null_count_G</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              uen                issuance_agency_id 
+                                0                                 0 
+                      entity_name           entity_type_description 
+                                0                                 0 
+business_constitution_description          company_type_description 
+                                0                                 0 
+     paf_constitution_description         entity_status_description 
+                                0                                 0 
+  registration_incorporation_date                    uen_issue_date 
+                                0                                 0 
+                     address_type                             block 
+                                0                                 0 
+                      street_name                          level_no 
+                                0                                 2 
+                          unit_no                     building_name 
+                                1                                 0 
+                      postal_code               other_address_line1 
+                                0                                 0 
+              other_address_line2                  account_due_date 
+                                0                                 0 
+               annual_return_date                 primary_ssic_code 
+                                0                                 0 
+         primary_ssic_description   primary_user_described_activity 
+                                0                                 0 
+              secondary_ssic_code        secondary_ssic_description 
+                                0                                 0 
+secondary_user_described_activity                    no_of_officers 
+                                0                                 0 
+              former_entity_name1               former_entity_name2 
+                                0                                 0 
+              former_entity_name3               former_entity_name4 
+                                0                                 0 
+              former_entity_name5               former_entity_name6 
+                                0                                 0 
+              former_entity_name7               former_entity_name8 
+                                0                                 0 
+              former_entity_name9              former_entity_name10 
+                                0                                 0 
+             former_entity_name11              former_entity_name12 
+                                0                                 0 
+             former_entity_name13              former_entity_name14 
+                                0                                 0 
+             former_entity_name15                uen_of_audit_firm1 
+                                0                                 0 
+              name_of_audit_firm1                uen_of_audit_firm2 
+                                0                                 0 
+              name_of_audit_firm2                uen_of_audit_firm3 
+                                0                                 0 
+              name_of_audit_firm3                uen_of_audit_firm4 
+                                0                                 0 
+              name_of_audit_firm4                uen_of_audit_firm5 
+                                0                                 0 
+              name_of_audit_firm5 
+                                0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(null_count_G), <span class="at">Null_Count =</span> null_count_G)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                             Column Null_Count
+uen                                                             uen          0
+issuance_agency_id                               issuance_agency_id          0
+entity_name                                             entity_name          0
+entity_type_description                     entity_type_description          0
+business_constitution_description business_constitution_description          0
+company_type_description                   company_type_description          0
+paf_constitution_description           paf_constitution_description          0
+entity_status_description                 entity_status_description          0
+registration_incorporation_date     registration_incorporation_date          0
+uen_issue_date                                       uen_issue_date          0
+address_type                                           address_type          0
+block                                                         block          0
+street_name                                             street_name          0
+level_no                                                   level_no          2
+unit_no                                                     unit_no          1
+building_name                                         building_name          0
+postal_code                                             postal_code          0
+other_address_line1                             other_address_line1          0
+other_address_line2                             other_address_line2          0
+account_due_date                                   account_due_date          0
+annual_return_date                               annual_return_date          0
+primary_ssic_code                                 primary_ssic_code          0
+primary_ssic_description                   primary_ssic_description          0
+primary_user_described_activity     primary_user_described_activity          0
+secondary_ssic_code                             secondary_ssic_code          0
+secondary_ssic_description               secondary_ssic_description          0
+secondary_user_described_activity secondary_user_described_activity          0
+no_of_officers                                       no_of_officers          0
+former_entity_name1                             former_entity_name1          0
+former_entity_name2                             former_entity_name2          0
+former_entity_name3                             former_entity_name3          0
+former_entity_name4                             former_entity_name4          0
+former_entity_name5                             former_entity_name5          0
+former_entity_name6                             former_entity_name6          0
+former_entity_name7                             former_entity_name7          0
+former_entity_name8                             former_entity_name8          0
+former_entity_name9                             former_entity_name9          0
+former_entity_name10                           former_entity_name10          0
+former_entity_name11                           former_entity_name11          0
+former_entity_name12                           former_entity_name12          0
+former_entity_name13                           former_entity_name13          0
+former_entity_name14                           former_entity_name14          0
+former_entity_name15                           former_entity_name15          0
+uen_of_audit_firm1                               uen_of_audit_firm1          0
+name_of_audit_firm1                             name_of_audit_firm1          0
+uen_of_audit_firm2                               uen_of_audit_firm2          0
+name_of_audit_firm2                             name_of_audit_firm2          0
+uen_of_audit_firm3                               uen_of_audit_firm3          0
+name_of_audit_firm3                             name_of_audit_firm3          0
+uen_of_audit_firm4                               uen_of_audit_firm4          0
+name_of_audit_firm4                             name_of_audit_firm4          0
+uen_of_audit_firm5                               uen_of_audit_firm5          0
+name_of_audit_firm5                             name_of_audit_firm5          0</code></pre>
+</div>
+</div>
+<p>as we can see their are only 2 columns which has null values which is only 1 &amp; 2 values missing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>duplicate_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">duplicated</span>(section_G))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>duplicate_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>There are <strong>no exact duplicates</strong> in this dataset.</p>
 </section>
 <section id="transport-data" class="level2">
 <h2 class="anchored" data-anchor-id="transport-data">Transport data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 90798 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -592,10 +722,255 @@ date  (2): registration_incorporation_date, uen_issue_date
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>section_H</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 90,798 × 53
+   uen       issuance_agency_id entity_name               entity_type_descript…¹
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 
+ 1 00002400K ACRA               HOCK HENG &amp; CO            Sole Proprietorship/ …
+ 2 00022700E ACRA               HANG FONG YUEN            Sole Proprietorship/ …
+ 3 00023100B ACRA               HUA SENG AND COMPANY      Sole Proprietorship/ …
+ 4 00027700B ACRA               HOCK SENG &amp; COMPANY       Sole Proprietorship/ …
+ 5 00035000A ACRA               HOCK THYE TONG MEDICAL H… Sole Proprietorship/ …
+ 6 00056500L ACRA               HUP HIN HO                Sole Proprietorship/ …
+ 7 00060600J ACRA               HENG SHEANG               Sole Proprietorship/ …
+ 8 00067800K ACRA               HAI CHEW LODGING HOUSE    Sole Proprietorship/ …
+ 9 00068300X ACRA               HOCK THYE HIN             Sole Proprietorship/ …
+10 00073500X ACRA               HOCK CHOON TONG MEDICAL … Sole Proprietorship/ …
+# ℹ 90,788 more rows
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p>we chek for null or blank values</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>null_count_H <span class="ot">&lt;-</span> <span class="fu">sapply</span>(section_H, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>null_count_H</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              uen                issuance_agency_id 
+                                0                                 0 
+                      entity_name           entity_type_description 
+                                0                                 0 
+business_constitution_description          company_type_description 
+                                0                                 0 
+     paf_constitution_description         entity_status_description 
+                                0                                 0 
+  registration_incorporation_date                    uen_issue_date 
+                                0                                 0 
+                     address_type                             block 
+                                0                                 1 
+                      street_name                          level_no 
+                                0                                 3 
+                          unit_no                     building_name 
+                                4                                 0 
+                      postal_code               other_address_line1 
+                                0                                 0 
+              other_address_line2                  account_due_date 
+                                0                                 0 
+               annual_return_date                 primary_ssic_code 
+                                0                                 0 
+         primary_ssic_description   primary_user_described_activity 
+                                2                                 0 
+              secondary_ssic_code        secondary_ssic_description 
+                                0                                 2 
+secondary_user_described_activity                    no_of_officers 
+                                0                                 0 
+              former_entity_name1               former_entity_name2 
+                                0                                 0 
+              former_entity_name3               former_entity_name4 
+                                0                                 0 
+              former_entity_name5               former_entity_name6 
+                                0                                 0 
+              former_entity_name7               former_entity_name8 
+                                0                                 0 
+              former_entity_name9              former_entity_name10 
+                                0                                 0 
+             former_entity_name11              former_entity_name12 
+                                0                                 0 
+             former_entity_name13              former_entity_name14 
+                                0                                 0 
+             former_entity_name15                uen_of_audit_firm1 
+                                0                                 0 
+              name_of_audit_firm1                uen_of_audit_firm2 
+                                0                                 0 
+              name_of_audit_firm2                uen_of_audit_firm3 
+                                0                                 0 
+              name_of_audit_firm3                uen_of_audit_firm4 
+                                0                                 0 
+              name_of_audit_firm4                uen_of_audit_firm5 
+                                0                                 0 
+              name_of_audit_firm5 
+                                0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(null_count_H), <span class="at">Null_Count =</span> null_count_H)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                             Column Null_Count
+uen                                                             uen          0
+issuance_agency_id                               issuance_agency_id          0
+entity_name                                             entity_name          0
+entity_type_description                     entity_type_description          0
+business_constitution_description business_constitution_description          0
+company_type_description                   company_type_description          0
+paf_constitution_description           paf_constitution_description          0
+entity_status_description                 entity_status_description          0
+registration_incorporation_date     registration_incorporation_date          0
+uen_issue_date                                       uen_issue_date          0
+address_type                                           address_type          0
+block                                                         block          1
+street_name                                             street_name          0
+level_no                                                   level_no          3
+unit_no                                                     unit_no          4
+building_name                                         building_name          0
+postal_code                                             postal_code          0
+other_address_line1                             other_address_line1          0
+other_address_line2                             other_address_line2          0
+account_due_date                                   account_due_date          0
+annual_return_date                               annual_return_date          0
+primary_ssic_code                                 primary_ssic_code          0
+primary_ssic_description                   primary_ssic_description          2
+primary_user_described_activity     primary_user_described_activity          0
+secondary_ssic_code                             secondary_ssic_code          0
+secondary_ssic_description               secondary_ssic_description          2
+secondary_user_described_activity secondary_user_described_activity          0
+no_of_officers                                       no_of_officers          0
+former_entity_name1                             former_entity_name1          0
+former_entity_name2                             former_entity_name2          0
+former_entity_name3                             former_entity_name3          0
+former_entity_name4                             former_entity_name4          0
+former_entity_name5                             former_entity_name5          0
+former_entity_name6                             former_entity_name6          0
+former_entity_name7                             former_entity_name7          0
+former_entity_name8                             former_entity_name8          0
+former_entity_name9                             former_entity_name9          0
+former_entity_name10                           former_entity_name10          0
+former_entity_name11                           former_entity_name11          0
+former_entity_name12                           former_entity_name12          0
+former_entity_name13                           former_entity_name13          0
+former_entity_name14                           former_entity_name14          0
+former_entity_name15                           former_entity_name15          0
+uen_of_audit_firm1                               uen_of_audit_firm1          0
+name_of_audit_firm1                             name_of_audit_firm1          0
+uen_of_audit_firm2                               uen_of_audit_firm2          0
+name_of_audit_firm2                             name_of_audit_firm2          0
+uen_of_audit_firm3                               uen_of_audit_firm3          0
+name_of_audit_firm3                             name_of_audit_firm3          0
+uen_of_audit_firm4                               uen_of_audit_firm4          0
+name_of_audit_firm4                             name_of_audit_firm4          0
+uen_of_audit_firm5                               uen_of_audit_firm5          0
+name_of_audit_firm5                             name_of_audit_firm5          0</code></pre>
+</div>
+</div>
+<p>as we can see their are only 4 columns which has null values which is only 1 to 3 values is missing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>duplicate_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">duplicated</span>(section_E))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>duplicate_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>There are <strong>no exact duplicates</strong> in this dataset.</p>
+</section>
+</section>
+<section id="extracting-selected-business" class="level1">
+<h1>Extracting Selected Business</h1>
+<p>Extracting the selected Business registered between <strong>1st January 2024 to 30th June 2025.</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>section_E<span class="sc">$</span>registration_incorporation_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(section_E<span class="sc">$</span>registration_incorporation_date, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Defining date range</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2024-01-01"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2025-06-30"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Extracting the date form the section E business.</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>E_df <span class="ot">&lt;-</span> <span class="fu">subset</span>(section_E, registration_incorporation_date <span class="sc">&gt;=</span> start_date <span class="sc">&amp;</span> registration_incorporation_date <span class="sc">&lt;=</span> end_date)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>E_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,311 × 53
+   uen        issuance_agency_id entity_name              entity_type_descript…¹
+   &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                    &lt;chr&gt;                 
+ 1 202413704R ACRA               EVERYIN PTE. LTD.        Local Company         
+ 2 202438156M ACRA               ELMWOOD AVIATION PTE. L… Local Company         
+ 3 202400028R ACRA               EXIMPAY PTE. LTD.        Local Company         
+ 4 202400041E ACRA               ECRA SERVICES PTE. LTD.  Local Company         
+ 5 202400045H ACRA               ELITE BUSINESS SOLUTION… Local Company         
+ 6 202400071D ACRA               ESG PLANET SOLUTIONS HO… Local Company         
+ 7 202400079K ACRA               ENTER ENTERTAINMENT PRI… Local Company         
+ 8 202400114N ACRA               ETREEGO PTE. LTD.        Local Company         
+ 9 202400187R ACRA               EVENT STYLING PTE. LTD.  Local Company         
+10 202400191D ACRA               EVERSOURCE II PARTNERS … Local Company         
+# ℹ 4,301 more rows
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p><strong>Extracting the date form the section G business.</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>G_df <span class="ot">&lt;-</span> <span class="fu">subset</span>(section_G, registration_incorporation_date <span class="sc">&gt;=</span> start_date <span class="sc">&amp;</span> registration_incorporation_date <span class="sc">&lt;=</span> end_date)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>G_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,405 × 53
+   uen        issuance_agency_id entity_name              entity_type_descript…¹
+   &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                    &lt;chr&gt;                 
+ 1 202424694K ACRA               GEY LANG PTE. LTD.       Local Company         
+ 2 202434578M ACRA               GNH RAFFLES PTE. LTD.    Local Company         
+ 3 202444276E ACRA               GENIUS SOLUTIONS PTE. L… Local Company         
+ 4 202444277R ACRA               GENIUS VISION PTE. LTD.  Local Company         
+ 5 202502685D ACRA               GHX PTE. LTD.            Local Company         
+ 6 202505387K ACRA               GALACTICA SPV PTE. LTD.  Local Company         
+ 7 202518260C ACRA               GEMMIL SHIPPING PTE. LT… Local Company         
+ 8 202523535W ACRA               GRAPHENOVATION PTE. LTD. Local Company         
+ 9 202400000D ACRA               GOLD CARZ PTE. LTD.      Local Company         
+10 202400001N ACRA               GDPS CONSULTING PTE. LT… Local Company         
+# ℹ 4,395 more rows
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p><strong>Extracting the date form the section H business.</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>H_df <span class="ot">&lt;-</span> <span class="fu">subset</span>(section_H, registration_incorporation_date <span class="sc">&gt;=</span> start_date <span class="sc">&amp;</span> registration_incorporation_date <span class="sc">&lt;=</span> end_date)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>H_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,825 × 53
+   uen        issuance_agency_id entity_name              entity_type_descript…¹
+   &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                    &lt;chr&gt;                 
+ 1 202451927D ACRA               HXK  PTE. LTD.           Local Company         
+ 2 202505194C ACRA               HIEUDAN PTE. LTD.        Local Company         
+ 3 202514643C ACRA               HEAL SPACE PTE. LTD.     Local Company         
+ 4 202521000Z ACRA               HTI3 PTE. LTD.           Local Company         
+ 5 202400006H ACRA               HYDRA GAMES PTE. LTD.    Local Company         
+ 6 202400010R ACRA               HANADOLLY PTE. LTD.      Local Company         
+ 7 202400099R ACRA               HAIYANG SOLUTION PRIVAT… Local Company         
+ 8 202400105M ACRA               HANA CREDIT PTE. LTD.    Local Company         
+ 9 202400106D ACRA               HAO.SG PTE. LTD.         Local Company         
+10 202400135K ACRA               HOSANNA MANPOWER RESOUR… Local Company         
+# ℹ 4,815 more rows
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;, …</code></pre>
+</div>
 </div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
