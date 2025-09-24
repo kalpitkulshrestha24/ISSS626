@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">In-class Exercise 03B</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="K:/kalpitkulshrestha24/ISSS626/_site/In-class Exercise/In-class Exercise 4/In-class Ex04.html">
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 4/In-class Ex4.html">
  <span class="dropdown-text">In-class Exercise 4</span></a>
   </li>  
     </ul>
@@ -162,8 +162,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
         <li>
-    <a class="dropdown-item" href="../../Take Home Exercise/Take-Home Exercise 3/Take-Home EXercise 3A.html">
- <span class="dropdown-text">Take Home Exercise 3A</span></a>
+    <a class="dropdown-item" href="../../Take Home Exercise/Take-Home Exercise 1/Take-Home Exercise 1.html">
+ <span class="dropdown-text">Take Home Exercise 1</span></a>
   </li>  
     </ul>
   </li>
@@ -230,10 +230,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
-  <li><a href="#installing-the-packages-into-r-environment" id="toc-installing-the-packages-into-r-environment" class="nav-link" data-scroll-target="#installing-the-packages-into-r-environment">Installing the packages into R environment</a></li>
-  <li><a href="#downloading-data-and-preparing-data" id="toc-downloading-data-and-preparing-data" class="nav-link" data-scroll-target="#downloading-data-and-preparing-data">Downloading data and preparing data</a>
+  <li><a href="#installing-the-packages-into-r-environment" id="toc-installing-the-packages-into-r-environment" class="nav-link" data-scroll-target="#installing-the-packages-into-r-environment">Installing the packages into R environment</a>
   <ul class="collapse">
-  <li><a href="#preparing-and-tidying-the-data" id="toc-preparing-and-tidying-the-data" class="nav-link" data-scroll-target="#preparing-and-tidying-the-data">Preparing and tidying the data</a></li>
+  <li><a href="#downloading-data-and-preparing-data" id="toc-downloading-data-and-preparing-data" class="nav-link" data-scroll-target="#downloading-data-and-preparing-data">Downloading data and preparing data</a></li>
+  <li><a href="#reproducibilty" id="toc-reproducibilty" class="nav-link" data-scroll-target="#reproducibilty">Reproducibilty</a></li>
+  <li><a href="#preparing-and-tidying-the-data" id="toc-preparing-and-tidying-the-data" class="nav-link" data-scroll-target="#preparing-and-tidying-the-data">Preparing and tidying the data</a>
+  <ul class="collapse">
+  <li><a href="#data--water-supply" id="toc-data--water-supply" class="nav-link" data-scroll-target="#data--water-supply">Data -water supply</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -267,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 22, 2025</p>
+      <p class="date-modified">September 24, 2025</p>
     </div>
   </div>
     
@@ -292,14 +296,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="downloading-data-and-preparing-data" class="level1">
-<h1>Downloading data and preparing data</h1>
+<section id="downloading-data-and-preparing-data" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-data-and-preparing-data">Downloading data and preparing data</h2>
 <p>The 3 business I have selected for this exercise are <strong>Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)</strong>.</p>
+</section>
+<section id="reproducibilty" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibilty">Reproducibilty</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
 <section id="preparing-and-tidying-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-and-tidying-the-data">Preparing and tidying the data</h2>
+<section id="data--water-supply" class="level3">
+<h3 class="anchored" data-anchor-id="data--water-supply">Data -water supply</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>section_E <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>section_E <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 83190 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -313,7 +325,7 @@ date  (2): registration_incorporation_date, uen_issue_date
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>section_G <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>section_G <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 81783 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -327,7 +339,7 @@ date  (2): registration_incorporation_date, uen_issue_date
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 90798 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -342,6 +354,7 @@ date  (2): registration_incorporation_date, uen_issue_date
 </div>
 
 
+</section>
 </section>
 </section>
 

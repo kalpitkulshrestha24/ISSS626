@@ -17,13 +17,18 @@ The specific objectives of this take-home exercise are as follows:
 ```{r}
 pacman::p_load(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)
 ```
-# Downloading data and preparing data
+## Downloading data and preparing data
 The 3 business I have selected for this exercise are **Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)**.
 
-
+## Reproducibilty
+```{r}
+set.seed(1234)
+```
 
 
 ## Preparing and tidying the data
+
+### Data -water supply
 
 ```{r}
 section_E <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv")
