@@ -9,7 +9,7 @@
 <meta name="author" content="Kalpit Kulshrestha">
 <meta name="dcterms.date" content="2025-09-16">
 
-<title>Take-Home Exercise 1 - Geospatial Analytics for Public Good – ISSS626</title>
+<title>Take-Home Exercise 1 - Geospatial Analytics for Public Good – ISSS626- GAA</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">ISSS626</span>
+    <span class="navbar-title">ISSS626- GAA</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -230,14 +230,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#assignment-task" id="toc-assignment-task" class="nav-link" data-scroll-target="#assignment-task">Assignment Task</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The Data</a></li>
   <li><a href="#installing-the-packages-into-r-environment" id="toc-installing-the-packages-into-r-environment" class="nav-link" data-scroll-target="#installing-the-packages-into-r-environment">Installing the packages into R environment</a>
   <ul class="collapse">
-  <li><a href="#downloading-data-and-preparing-data" id="toc-downloading-data-and-preparing-data" class="nav-link" data-scroll-target="#downloading-data-and-preparing-data">Downloading data and preparing data</a></li>
   <li><a href="#reproducibilty" id="toc-reproducibilty" class="nav-link" data-scroll-target="#reproducibilty">Reproducibilty</a></li>
+  </ul></li>
   <li><a href="#preparing-and-tidying-the-data" id="toc-preparing-and-tidying-the-data" class="nav-link" data-scroll-target="#preparing-and-tidying-the-data">Preparing and tidying the data</a>
   <ul class="collapse">
-  <li><a href="#data--water-supply" id="toc-data--water-supply" class="nav-link" data-scroll-target="#data--water-supply">Data -water supply</a></li>
-  </ul></li>
+  <li><a href="#water-supply-data" id="toc-water-supply-data" class="nav-link" data-scroll-target="#water-supply-data">Water supply data</a></li>
+  <li><a href="#wholesale-data" id="toc-wholesale-data" class="nav-link" data-scroll-target="#wholesale-data">Wholesale data</a></li>
+  <li><a href="#transport-data" id="toc-transport-data" class="nav-link" data-scroll-target="#transport-data">Transport data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -291,25 +294,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>To identify complex interaction patterns and emergent phenomena in the distribution of new businesses beyond simple proximity or density, such as clustering of related businesses, the influence of past trends on future locations, and the overall structural development of commercial areas, which are crucial for scientific urban planning and policy-making.</li>
 </ul>
 </section>
+<section id="assignment-task" class="level1">
+<h1>Assignment Task</h1>
+<p>Reference to: <a href="https://isss626-ay2025-26aug.netlify.app/take-home_ex01">Take-home Exercise 1: Geospatial Analytics for Public Good</a></p>
+</section>
+<section id="the-data" class="level1">
+<h1>The Data</h1>
+<p>The following three dataset will be used in this exercise.which is accesed form the Infomration on Corporate Entities dataset of ACRA which has 27 CSV file for that refer here <a href="https://classification.codes/classifications/industry/ssic-singapore">SSIC: Singapore Standard Industrial Classification</a></p>
+<ol type="1">
+<li>Section-E : Water supply; sewerage, waste management and remediation activities.</li>
+<li>Section-G : Wholesale and retail trade</li>
+<li>Section-H : Transportation and storage</li>
+</ol>
+</section>
 <section id="installing-the-packages-into-r-environment" class="level1">
 <h1>Installing the packages into R environment</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Package</strong></td>
+<td><strong>Purpose</strong></td>
+</tr>
+<tr class="even">
+<td><strong>sf</strong></td>
+<td>Provides a modern way to store, manipulate, and analyze spatial vector data (points, lines, polygons). Ideal for reading shapefiles and linking spatial attributes to your assignment data.</td>
+</tr>
+<tr class="odd">
+<td><strong>tmap</strong></td>
+<td>Creates professional-looking thematic maps, both static and interactive. Useful for visualizing spatial patterns (e.g., hotspots, clusters) from your assignment dataset</td>
+</tr>
+<tr class="even">
+<td><strong>tidyverse</strong></td>
+<td>A collection of core data-wrangling and visualization packages (dplyr, ggplot2, tidyr, readr). Essential for cleaning, transforming, and plotting your assignment data before/after spatial analysis</td>
+</tr>
+<tr class="odd">
+<td><strong>rvest</strong></td>
+<td>A web-scraping package to extract data from websites (tables, text, attributes). Handy if your assignment requires fetching external data like location details, business lists, or geo-coordinates</td>
+</tr>
+<tr class="even">
+<td><strong>terra</strong></td>
+<td>Handles raster data (e.g., satellite images, elevation models) efficiently. Useful when your assignment involves environmental layers, raster overlays, or extracting values at point locations.</td>
+</tr>
+<tr class="odd">
+<td><strong>spatstat</strong></td>
+<td>A powerful framework for spatial point pattern analysis—testing clustering, dispersion, intensity, and spatial statistics. Helps if you’re analyzing where events or businesses occur</td>
+</tr>
+<tr class="even">
+<td><strong>sparr</strong></td>
+<td>Focuses on spatial and spatio-temporal kernel density estimation and risk analysis. Excellent for identifying hotspots and spatial risk zones in your assignment</td>
+</tr>
+<tr class="odd">
+<td><strong>spdep</strong></td>
+<td>Provides tools for spatial dependence, weights matrices, and spatial regression models. Useful if your assignment involves testing spatial autocorrelation (Moran’s I, LISA) or spatial lag/error models</td>
+</tr>
+</tbody>
+</table>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="downloading-data-and-preparing-data" class="level2">
-<h2 class="anchored" data-anchor-id="downloading-data-and-preparing-data">Downloading data and preparing data</h2>
-<p>The 3 business I have selected for this exercise are <strong>Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)</strong>.</p>
-</section>
 <section id="reproducibilty" class="level2">
 <h2 class="anchored" data-anchor-id="reproducibilty">Reproducibilty</h2>
+<p>For reproducible results of this exercise, we will use seed value, 1234.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="preparing-and-tidying-the-data" class="level2">
-<h2 class="anchored" data-anchor-id="preparing-and-tidying-the-data">Preparing and tidying the data</h2>
-<section id="data--water-supply" class="level3">
-<h3 class="anchored" data-anchor-id="data--water-supply">Data -water supply</h3>
+</section>
+<section id="preparing-and-tidying-the-data" class="level1">
+<h1>Preparing and tidying the data</h1>
+<section id="water-supply-data" class="level2">
+<h2 class="anchored" data-anchor-id="water-supply-data">Water supply data</h2>
+<p>Firstly, we will import the ACRA Information on Corporate Entities_G using <code>read_csv()</code> of readr package.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>section_E <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -323,9 +382,165 @@ date  (2): registration_incorporation_date, uen_issue_date
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>section_E</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 83,190 × 53
+   uen       issuance_agency_id entity_name               entity_type_descript…¹
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                     &lt;chr&gt;                 
+ 1 00016700B ACRA               E S MOHAMED HANIFA        Sole Proprietorship/ …
+ 2 00024400K ACRA               EVATT &amp; CO                Sole Proprietorship/ …
+ 3 00041000D ACRA               E N MOHAMED IBRAHIM &amp; CO  Sole Proprietorship/ …
+ 4 00045700X ACRA               ENSIGN BOOK STORE         Sole Proprietorship/ …
+ 5 00051400D ACRA               ENG THYE CHEONG           Sole Proprietorship/ …
+ 6 00085600B ACRA               EVERBRIGHT OPTICAL COMPA… Sole Proprietorship/ …
+ 7 00146200L ACRA               ENG CHUAN &amp; CO            Sole Proprietorship/ …
+ 8 00167800X ACRA               EASTERN TAILORING CO      Sole Proprietorship/ …
+ 9 00200400C ACRA               EASTERN SHOE COMPANY      Sole Proprietorship/ …
+10 00225200K ACRA               ENG JOO BATTERY SERVICE   Sole Proprietorship/ …
+# ℹ 83,180 more rows
+# ℹ abbreviated name: ¹​entity_type_description
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p>From the output above, we can observe that there are <strong>53 columns</strong> in this dataset and there are <strong>83,190 rows</strong> in this dataset.</p>
+<p>we chek for null or blank values</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>null_count <span class="ot">&lt;-</span> <span class="fu">sapply</span>(section_E, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>null_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              uen                issuance_agency_id 
+                                0                                 0 
+                      entity_name           entity_type_description 
+                                0                                 0 
+business_constitution_description          company_type_description 
+                                0                                 0 
+     paf_constitution_description         entity_status_description 
+                                0                                 0 
+  registration_incorporation_date                    uen_issue_date 
+                                0                                 0 
+                     address_type                             block 
+                                0                                 0 
+                      street_name                          level_no 
+                                0                                 1 
+                          unit_no                     building_name 
+                                1                                 0 
+                      postal_code               other_address_line1 
+                                0                                 0 
+              other_address_line2                  account_due_date 
+                                0                                 0 
+               annual_return_date                 primary_ssic_code 
+                                0                                 0 
+         primary_ssic_description   primary_user_described_activity 
+                                3                                 0 
+              secondary_ssic_code        secondary_ssic_description 
+                                0                                 3 
+secondary_user_described_activity                    no_of_officers 
+                                0                                 0 
+              former_entity_name1               former_entity_name2 
+                                0                                 0 
+              former_entity_name3               former_entity_name4 
+                                0                                 0 
+              former_entity_name5               former_entity_name6 
+                                0                                 0 
+              former_entity_name7               former_entity_name8 
+                                0                                 0 
+              former_entity_name9              former_entity_name10 
+                                0                                 0 
+             former_entity_name11              former_entity_name12 
+                                0                                 0 
+             former_entity_name13              former_entity_name14 
+                                0                                 0 
+             former_entity_name15                uen_of_audit_firm1 
+                                0                                 0 
+              name_of_audit_firm1                uen_of_audit_firm2 
+                                0                                 0 
+              name_of_audit_firm2                uen_of_audit_firm3 
+                                0                                 0 
+              name_of_audit_firm3                uen_of_audit_firm4 
+                                0                                 0 
+              name_of_audit_firm4                uen_of_audit_firm5 
+                                0                                 0 
+              name_of_audit_firm5 
+                                0 </code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>section_G <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Column =</span> <span class="fu">names</span>(null_count), <span class="at">Null_Count =</span> null_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                             Column Null_Count
+uen                                                             uen          0
+issuance_agency_id                               issuance_agency_id          0
+entity_name                                             entity_name          0
+entity_type_description                     entity_type_description          0
+business_constitution_description business_constitution_description          0
+company_type_description                   company_type_description          0
+paf_constitution_description           paf_constitution_description          0
+entity_status_description                 entity_status_description          0
+registration_incorporation_date     registration_incorporation_date          0
+uen_issue_date                                       uen_issue_date          0
+address_type                                           address_type          0
+block                                                         block          0
+street_name                                             street_name          0
+level_no                                                   level_no          1
+unit_no                                                     unit_no          1
+building_name                                         building_name          0
+postal_code                                             postal_code          0
+other_address_line1                             other_address_line1          0
+other_address_line2                             other_address_line2          0
+account_due_date                                   account_due_date          0
+annual_return_date                               annual_return_date          0
+primary_ssic_code                                 primary_ssic_code          0
+primary_ssic_description                   primary_ssic_description          3
+primary_user_described_activity     primary_user_described_activity          0
+secondary_ssic_code                             secondary_ssic_code          0
+secondary_ssic_description               secondary_ssic_description          3
+secondary_user_described_activity secondary_user_described_activity          0
+no_of_officers                                       no_of_officers          0
+former_entity_name1                             former_entity_name1          0
+former_entity_name2                             former_entity_name2          0
+former_entity_name3                             former_entity_name3          0
+former_entity_name4                             former_entity_name4          0
+former_entity_name5                             former_entity_name5          0
+former_entity_name6                             former_entity_name6          0
+former_entity_name7                             former_entity_name7          0
+former_entity_name8                             former_entity_name8          0
+former_entity_name9                             former_entity_name9          0
+former_entity_name10                           former_entity_name10          0
+former_entity_name11                           former_entity_name11          0
+former_entity_name12                           former_entity_name12          0
+former_entity_name13                           former_entity_name13          0
+former_entity_name14                           former_entity_name14          0
+former_entity_name15                           former_entity_name15          0
+uen_of_audit_firm1                               uen_of_audit_firm1          0
+name_of_audit_firm1                             name_of_audit_firm1          0
+uen_of_audit_firm2                               uen_of_audit_firm2          0
+name_of_audit_firm2                             name_of_audit_firm2          0
+uen_of_audit_firm3                               uen_of_audit_firm3          0
+name_of_audit_firm3                             name_of_audit_firm3          0
+uen_of_audit_firm4                               uen_of_audit_firm4          0
+name_of_audit_firm4                             name_of_audit_firm4          0
+uen_of_audit_firm5                               uen_of_audit_firm5          0
+name_of_audit_firm5                             name_of_audit_firm5          0</code></pre>
+</div>
+</div>
+<p>as we can see their are only 4 columns which has null values which is only 1 to 3 values is missing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>duplicate_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">duplicated</span>(section_E))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>duplicate_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>There are <strong>no exact duplicates</strong> in this dataset.</p>
+</section>
+<section id="wholesale-data" class="level2">
+<h2 class="anchored" data-anchor-id="wholesale-data">Wholesale data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>section_G <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 81783 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -337,9 +552,35 @@ date  (2): registration_incorporation_date, uen_issue_date
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>section_G</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 81,783 × 53
+   uen       issuance_agency_id entity_name             entity_type_description 
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                   &lt;chr&gt;                   
+ 1 00046100L ACRA               G M DE SILVA JEWELLERS  Sole Proprietorship/ Pa…
+ 2 00056900C ACRA               GUAN HUAT HIN           Sole Proprietorship/ Pa…
+ 3 00072900X ACRA               GOH SOON MOH UNDERTAKER Sole Proprietorship/ Pa…
+ 4 00099300W ACRA               GEIOK KEE               Sole Proprietorship/ Pa…
+ 5 00154200A ACRA               GUAN SENG LOONG         Sole Proprietorship/ Pa…
+ 6 00170100B ACRA               GIM CHEONG &amp; CO         Sole Proprietorship/ Pa…
+ 7 00236300C ACRA               GOH TOCK LEONG          Sole Proprietorship/ Pa…
+ 8 00252700J ACRA               GOOD FRIEND TAILOR      Sole Proprietorship/ Pa…
+ 9 00254800C ACRA               GUAN SENG               Sole Proprietorship/ Pa…
+10 00263600W ACRA               GUAN CHIN SENG          Sole Proprietorship/ Pa…
+# ℹ 81,773 more rows
+# ℹ 49 more variables: business_constitution_description &lt;chr&gt;,
+#   company_type_description &lt;chr&gt;, paf_constitution_description &lt;chr&gt;,
+#   entity_status_description &lt;chr&gt;, registration_incorporation_date &lt;date&gt;,
+#   uen_issue_date &lt;date&gt;, address_type &lt;chr&gt;, block &lt;chr&gt;, street_name &lt;chr&gt;,
+#   level_no &lt;chr&gt;, unit_no &lt;chr&gt;, building_name &lt;chr&gt;, postal_code &lt;chr&gt;,
+#   other_address_line1 &lt;chr&gt;, other_address_line2 &lt;chr&gt;, …</code></pre>
 </div>
+</div>
+</section>
+<section id="transport-data" class="level2">
+<h2 class="anchored" data-anchor-id="transport-data">Transport data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 90798 Columns: 53
 ── Column specification ────────────────────────────────────────────────────────
@@ -354,7 +595,6 @@ date  (2): registration_incorporation_date, uen_issue_date
 </div>
 
 
-</section>
 </section>
 </section>
 

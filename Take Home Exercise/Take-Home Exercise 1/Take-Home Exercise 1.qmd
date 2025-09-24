@@ -4,57 +4,114 @@ author: "Kalpit Kulshrestha"
 date: "16/september/2025"
 date-modified: "last-modified"
 ---
+
 # Objectives
 
 In this take-home exercise, we are interested to investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore for the first six months of 2025
 
 The specific objectives of this take-home exercise are as follows:
 
-- To identify the “where” and “when” of new business entities, revealing clusters, patterns, and trends that are crucial for informed urban planning, resource allocation, and economic development.
-- To identify complex interaction patterns and emergent phenomena in the distribution of new businesses beyond simple proximity or density, such as clustering of related businesses, the influence of past trends on future locations, and the overall structural development of commercial areas, which are crucial for scientific urban planning and policy-making.
+-   To identify the “where” and “when” of new business entities, revealing clusters, patterns, and trends that are crucial for informed urban planning, resource allocation, and economic development.
+-   To identify complex interaction patterns and emergent phenomena in the distribution of new businesses beyond simple proximity or density, such as clustering of related businesses, the influence of past trends on future locations, and the overall structural development of commercial areas, which are crucial for scientific urban planning and policy-making.
+
+# Assignment Task
+
+Reference to: [Take-home Exercise 1: Geospatial Analytics for Public Good](https://isss626-ay2025-26aug.netlify.app/take-home_ex01)
+
+# The Data
+
+The following three dataset will be used in this exercise.which is accesed form the Infomration on Corporate Entities dataset of ACRA which has 27 CSV file for that refer here [SSIC: Singapore Standard Industrial Classification](https://classification.codes/classifications/industry/ssic-singapore)
+
+1.  Section-E : Water supply; sewerage, waste management and remediation activities.
+2.  Section-G : Wholesale and retail trade
+3.  Section-H : Transportation and storage
 
 # Installing the packages into R environment
+
+|  |  |
+|----------------|--------------------------------------------------------|
+| **Package** | **Purpose** |
+| **sf** | Provides a modern way to store, manipulate, and analyze spatial vector data (points, lines, polygons). Ideal for reading shapefiles and linking spatial attributes to your assignment data. |
+| **tmap** | Creates professional-looking thematic maps, both static and interactive. Useful for visualizing spatial patterns (e.g., hotspots, clusters) from your assignment dataset |
+| **tidyverse** | A collection of core data-wrangling and visualization packages (dplyr, ggplot2, tidyr, readr). Essential for cleaning, transforming, and plotting your assignment data before/after spatial analysis |
+| **rvest** | A web-scraping package to extract data from websites (tables, text, attributes). Handy if your assignment requires fetching external data like location details, business lists, or geo-coordinates |
+| **terra** | Handles raster data (e.g., satellite images, elevation models) efficiently. Useful when your assignment involves environmental layers, raster overlays, or extracting values at point locations. |
+| **spatstat** | A powerful framework for spatial point pattern analysis—testing clustering, dispersion, intensity, and spatial statistics. Helps if you’re analyzing where events or businesses occur |
+| **sparr** | Focuses on spatial and spatio-temporal kernel density estimation and risk analysis. Excellent for identifying hotspots and spatial risk zones in your assignment |
+| **spdep** | Provides tools for spatial dependence, weights matrices, and spatial regression models. Useful if your assignment involves testing spatial autocorrelation (Moran’s I, LISA) or spatial lag/error models |
+
 ```{r}
-pacman::p_load(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)
+pacman::p_load(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep)
 ```
-## Downloading data and preparing data
-The 3 business I have selected for this exercise are **Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)**.
 
 ## Reproducibilty
+
+For reproducible results of this exercise, we will use seed value, 1234.
+
 ```{r}
 set.seed(1234)
 ```
 
+# Preparing and tidying the data
 
-## Preparing and tidying the data
-
-### Data -water supply
-
+## Water supply data
+Firstly, we will import the ACRA Information on Corporate Entities_G using `read_csv()` of readr package.
 ```{r}
 section_E <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv")
+section_E
 ```
+From the output above, we can observe that there are **53 columns** in this dataset and there are **83,190 rows** in this dataset.
+
+we chek for null or blank values
+
+```{r}
+null_count <- sapply(section_E, function(x) sum(is.na(x)))
+null_count
+```
+
+```{r}
+data.frame(Column = names(null_count), Null_Count = null_count)
+```
+as we can see their are only 4 columns which has null values which is only 1 to 3 values is missing.
+
+```{r}
+duplicate_count <- sum(duplicated(section_E))
+duplicate_count
+```
+There are **no exact duplicates** in this dataset.
+
+
+
+## Wholesale data
+
 ```{r}
 section_G <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv")
+section_G
 ```
+we chek for null or blank values
+
+```{r}
+null_count <- sapply(section_G, function(x) sum(is.na(x)))
+null_count
+```
+
+```{r}
+data.frame(Column = names(null_count), Null_Count = null_count)
+```
+as we can see their are only 2 columns which has null values which is only 1 & 2 values missing.
+
+```{r}
+duplicate_count <- sum(duplicated(section_G))
+duplicate_count
+```
+There are **no exact duplicates** in this dataset.
+
+
+
+
+
+## Transport data
 
 ```{r}
 section_H <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
