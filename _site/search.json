@@ -33,5 +33,26 @@
     "title": "ISSS626",
     "section": "",
     "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     \n\n\n       GEOGCRS[“WGS 84”,ENSEMBLE[“World Geodetic System 1984 ensemble”,MEMBER[“World Geodetic System 1984 (Transit)”],MEMBER[“World Geodetic System 1984 (G730)”],MEMBER[“World Geodetic System 1984 (G873)”],MEMBER[“World Geodetic System 1984 (G1150)”],MEMBER[“World Geodetic System 1984 (G1674)”],MEMBER[“World Geodetic System 1984 (G1762)”],MEMBER[“World Geodetic System 1984 (G2139)”],MEMBER[“World Geodetic System 1984 (G2296)”],ELLIPSOID[“WGS 84”,6378137,298.257223563,LENGTHUNIT[“metre”,1]],ENSEMBLEACCURACY[2.0]],PRIMEM[“Greenwich”,0,ANGLEUNIT[“degree”,0.0174532925199433]],CS[ellipsoidal,2],AXIS[“geodetic latitude (Lat)”,north,ORDER[1],ANGLEUNIT[“degree”,0.0174532925199433]],AXIS[“geodetic longitude (Lon)”,east,ORDER[2],ANGLEUNIT[“degree”,0.0174532925199433]],USAGE[SCOPE[“Horizontal component of 3D system.”],AREA[“World.”],BBOX[-90,-180,90,180]],ID[“EPSG”,4326]] +proj=longlat +datum=WGS84 +no_defs 3452 4326 EPSG:4326 WGS 84 longlat EPSG:7030 true"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS626 - GAA",
+    "section": "",
+    "text": "Welcome! to the ISSS626 Geospatial Analytics & Application module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course."
+  },
+  {
+    "objectID": "index.html#spatial-data-analytics",
+    "href": "index.html#spatial-data-analytics",
+    "title": "ISSS626 - GAA",
+    "section": "Spatial Data Analytics",
+    "text": "Spatial Data Analytics\n\n\n\n(Image source: CVRD)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "about this site!\nThis website serves as a dedicated space for the submission of my academic work, including Hands-on Exercises and Take-home Exercises. It is designed to showcase my learning journey, practical applications of concepts, and problem-solving approaches. Each submission reflects the effort, knowledge, and skills I continue to build throughout my coursework.\nThe goal of this site is to provide a structured and organized way to track progress, document insights, and create a personal archive of completed exercises for future reference."
   }
 ]
