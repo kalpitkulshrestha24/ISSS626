@@ -1,0 +1,330 @@
+---
+title: "In-class Ex04 -Geographically Weighted Summary Statistics - gwModel methods"
+author: "Kalpit kulshrestha"
+date: "September 13, 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# Overview
+
+we are using Geographically weighted summary statistics (GWSS), method that calculates summary statistics for local areas within a dataset, rather than for the entire dataset globally. It gives more weight to nearby data points using a chosen kernel (like bisquare or Gaussian) and a set bandwidth. This helps find local differences in patterns and relationships across the area, giving more detailed insights than standard global statistics
+
+\*\*Application of GWSS GWSS shows how relationships between variables change across locations. It’s used in areas like environment, health, and socio-economics to map differences, find patterns, and guide local actions. By using local models instead of one global model, it reveals detailed patterns for better decision
+
+# Installing packages
+
+using `pacman` package we install all the libraries for the his In-class exercise
+
+```{r}
+pacman::p_load(sf, ggstatsplot,tmap, tidyverse, knitr, GWmodel)
+```
+
+# Importing and preparing the data
+
+## Importing Hunan shapefile
+
+```{r}
+hunan_sf <- st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/In-class Exercise/In-class Exercise 4/data/geospatial",
+                    layer = "Hunan")
+```
+
+## Importing Hunan_2012 files
+
+```{r}
+hunan2012 <- st_read("K:/kalpitkulshrestha24/ISSS626/In-class Exercise/In-class Exercise 4/data/aspatial/Hunan_2012.csv")
+```
+
+## join Hunan and Hunan_2012 data.frames.
+
+```{r}
+hunan_sf <- left_join(hunan_sf,hunan2012) %>%
+  select(1:3, 7, 15, 16, 31, 32)
+```
+
+# Mapping GDPPC
+
+```{r}
+hunan_sf$GDPPC <- as.numeric(gsub("[^0-9.]", "", as.character(hunan_sf$GDPPC)))
+
+basemap <- tm_shape(hunan_sf) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.5)
+
+gdppc <- qtm(hunan_sf, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+
+## converting to Spatial Polygon data frame
+
+GWmodel presently is built around the older `sp` and not `sf` formats for handling spatial data in R
+
+```{r}
+hunan_sp <- hunan_sf %>%
+  as_Spatial()
+```
+
+# Geographically Weighted Summary Statistics (GSWW) with adaptive bandwidth
+
+## Determine adaptive bandwidth - Cross-validation
+
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1,
+                data = hunan_sp,
+                approach = "CV",
+                adaptive = TRUE,
+                kernel = "bisquare",
+                longlat = T)
+```
+
+```{r}
+bw_CV
+```
+
+## Determine adaptive bandwidth - AIC
+
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1,
+                data = hunan_sp,
+                approach = "AIC",
+                adaptive = TRUE,
+                kernel = "bisquare",
+                longlat = T)
+```
+
+```{r}
+bw_AIC
+```
+
+# Computing Geographically weighted summary statistics
+
+computing geographically weighted summary statistics by using gwss() of GWmodel package. The analysis is performed using adaptive distance weighted. The distance is derived using AIC method and the kernel method used id bisquare.
+
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = bw_AIC,
+               kernel = "bisquare",
+               quantile = TRUE,
+               adaptive = TRUE,
+               longlat = T)
+```
+
+```{r}
+gwstat
+```
+
+**Note for myself:** gwss support five kernel methods. That are:
+
+-   gaussian
+-   exponential
+-   bisquare
+-   tricube
+-   boxcar
+
+After repating the code woth different kerenls and comparing result the result are this.
+
+Across the five kernels, the results show clear differences in how local statistics are smoothed and weighted. Bisquare and Tricube kernels produce similar outcomes with moderate standard deviations and variances, showing smooth but still locally sensitive patterns, and skewness ranging from slightly negative to about 3.5. Boxcar kernel applies a hard cut-off and gives a slightly higher local mean GDPPC with larger variance and standard deviation, making local estimates more abrupt. Exponential kernel produces more gradual weighting with distance, leading to a narrower spread of local means and moderate variance, with mostly positive skewness. Finally, the Gaussian kernel yields the smoothest and most stable estimates with the highest median GDPPC, lowest variance and standard deviation, and a consistently positive skewness. Overall, as you move from Boxcar to Gaussian, the influence becomes smoother and more stable, while Bisquare and Tricube strike a balance between local sensitivity and smoothness.
+
+## Preparing the output data
+
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+
+`cbind()` is used to append the newly deried data.frame onto *hunan_sf* sd data.frame.
+
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+
+## Visualising gepgrapically weighted summary statistics
+
+```{r}
+tm_shape(hunan_gstat) +
+  tm_polygons(fill = "GDPPC_LM",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "brewer.blues"),
+              fill.legend = tm_legend(
+                title = "local Mean")) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            frame = TRUE)
+```
+
+# GWSS with Fixed Bandwidth
+
+## Determine fixed bandwidth - Cross validation
+
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach = "CV",
+             adaptive = FALSE, 
+             kernel = "bisquare", 
+             longlat = T)
+```
+
+```{r}
+bw_CV
+```
+
+## Determine fixed bandwidth - AIC
+
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1, 
+             data = hunan_sp,
+             approach ="AIC",
+             adaptive = FALSE, 
+             kernel = "bisquare", 
+             longlat = T)
+```
+```{r}
+bw_AIC
+```
+## Adpative badnwif=dth computing GWSS
+```{r}
+gwstat <- gwss(data = hunan_sp,
+               vars = "GDPPC",
+               bw = bw_AIC,
+               kernel = "bisquare",
+               adaptive = FALSE,
+               quantile = FALSE,
+               longlat = T)
+```
+
+
+## Preparing the output data
+
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+
+### Visualising geographically weighted summary statistics
+
+```{r}
+tm_shape(hunan_gstat) +
+  tm_polygons(fill = "GDPPC_LM",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "brewer.blues"),
+              fill.legend = tm_legend(
+                title = "local Mean")) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically wieghted mean",
+            main.title.position = "center",
+            main.title.size = 2.0,
+            frame = TRUE)
+```
+# Geographically Weighted Correlation
+
+
+below code of chunk I am getting some error because one or both *agri* and *GDPPC* isn;t numeric. `ggscatterstats` draws marginal histogram using `stat_xsidein()`, which requires contiuous (numeric) data.
+
+```{r}
+ggscatterstats(
+  data = hunan2012, 
+  x = Agri, 
+  y = GDPPC,
+  xlab = "Gross Agriculture Output", ## label for the x-axis
+  ylab = "GDP per capita", 
+  label.var = County, 
+  label.expression = Agri > 10000 & GDPPC > 50000, 
+  point.label.args = list(alpha = 0.7, size = 4, color = "grey50"),
+  xfill = "#CC79A7", 
+  yfill = "#009E73", 
+  title = "Relationship between GDP PC and Gross Agriculture Output")
+```
+
+**Business question: Is there any relationship between GDP per capita and Gross Industry Output?**
+
+**Answer:** The chart shows that there is a statistically significant positive relationship between GDP per capita and Gross Agriculture Output. The Pearson correlation coefficient is r = 0.31 with a p-value of 0.0038, meaning the relationship is unlikely to be due to chance. In practical terms, counties with higher gross agricultural output tend to have higher GDP per capita. The fitted regression line (in blue) indicates this upward trend, while the shaded area shows the confidence interval around the estimate. However, the relationship is moderate (not very strong), suggesting that while agriculture output contributes to higher income levels, other factors also influence GDP per capita. This finding supports the idea that improvements in agricultural productivity may be associated with broader economic development in the region.
+
+
+# Geospatial analytics solution
+
+## Determine the bandwidth
+
+```{r}
+bw <- bw.gwr(GDPPC ~ GIO,
+             data = hunan_sp,
+             approach = "AICc",
+             adaptive = TRUE)
+```
+## Computing gwCorrelation
+```{r}
+gwstats <- gwss(hunan_sp, 
+                vars = c("GDPPC", "GIO"), 
+                bw = bw,
+                kernel = "bisquare",
+                adaptive = TRUE, 
+                longlat = T)
+```
+## Extracting the result
+```{r}
+gwstat_df <- as.data.frame(gwstats$SDF) %>%
+  select(c(12,13)) %>%
+  rename(gwCorr = Corr_GDPPC.GIO,
+         gwSpearman = Spearman_rho_GDPPC.GIO)
+```
+
+```{r}
+hunan_Corr <- cbind(hunan_sf, gwstat_df)
+```
+
+
+# Visualising Local Correlation
+
+
+```{r}
+tm_shape(hunan_Corr) +
+  tm_polygons(fill = "gwSpearman",
+              fill.scale = tm_scale_intervals(
+                style = "quantile",
+                n = 5,
+                values = "brewer.blues"),
+              fill.legend = tm_legend(
+                title = "local Spearman Rho")) +
+  tm_borders(fill_alpha = 0.5) +
+  tm_title("Local Spearman Rho", 
+  size = 2.0) +
+  tm_layout(frame = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

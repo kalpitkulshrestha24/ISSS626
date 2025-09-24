@@ -277,6 +277,7 @@ plot(density(childcareSG_ppp_km,
 # Fixed and adaptive KDE
 
 ## Computing KDE bu using fixed bandwidth
+
 We will compute a KDE layer by defining a bandwidth of 600 meter. Notice that in the code chunk below, the sigma value used is 0.6. This is because the unit of measurement of childcareSG_ppp_km object is in kilometer, hence the 600m is 0.6km.
 
 ```{r}
@@ -286,6 +287,7 @@ kde_childcareSG_fb <- density(childcareSG_ppp_km,
                               kernel="gaussian")
 plot(kde_childcareSG_fb)
 ```
+
 ## Computing KDE by using adaptive bandwidth
 
 Fixed bandwidth method is very sensitive to highly skew distribution of spatial point patterns over geographical units for example urban versus rural. One way to overcome this problem is by using adaptive bandwidth instead.
@@ -298,6 +300,7 @@ kde_childcareSG_ab <- adaptive.density(
   method="kernel")
 plot(kde_childcareSG_ab)
 ```
+
 Now, comparing both KDE fixed and adaptive.
 
 ```{r}
@@ -305,9 +308,11 @@ par(mfrow=c(1,2))
 plot(kde_childcareSG_fb, main = "Fixed bandwidth")
 plot(kde_childcareSG_ab, main = "Adaptive bandwidth")
 ```
+
 # Plotting cartographic quality KDE map
 
 ## Converting gridded output into raster
+
 ```{r}
 kde_childcareSG_bw_terra <- rast(kde_childcareSG_km)
 ```
@@ -315,10 +320,13 @@ kde_childcareSG_bw_terra <- rast(kde_childcareSG_km)
 ```{r}
 class(kde_childcareSG_bw_terra)
 ```
+
 ```{r}
 kde_childcareSG_bw_terra
 ```
+
 ## Assigning projection systems
+
 ```{r}
 crs(kde_childcareSG_bw_terra) <- "EPSG:3414"
 ```
@@ -326,7 +334,8 @@ crs(kde_childcareSG_bw_terra) <- "EPSG:3414"
 ```{r}
 kde_childcareSG_bw_terra
 ```
-##  Plotting KDE map with tmap
+
+## Plotting KDE map with tmap
 
 ```{r}
 tm_shape(kde_childcareSG_bw_terra) + 
@@ -347,13 +356,12 @@ tm_shape(kde_childcareSG_bw_terra) +
   tm_layout(scale = 1.0)
 ```
 
-
-
 # First Order SPPA at the Planning Subzone Level
 
 ## Geospatial data wrangling
 
 ### Extracting Study area
+
 ```{r}
 pg <- mpsz_cl %>%
   filter(PLN_AREA_N == "PUNGGOL")
@@ -372,7 +380,9 @@ plot(st_geometry(tm), main = "Tampines")
 plot(st_geometry(ck), main = "Choa Chu Kang")
 plot(st_geometry(jw), main = "Jurong West")
 ```
+
 ### Creating OWIN Object
+
 ```{r}
 pg_owin = as.owin(pg)
 tm_owin = as.owin(tm)
@@ -381,6 +391,7 @@ jw_owin = as.owin(jw)
 ```
 
 ### Combining point events object and owin object
+
 ```{r}
 childcare_pg_ppp = childcare_ppp[pg_owin]
 childcare_tm_ppp = childcare_ppp[tm_owin]
@@ -406,17 +417,7 @@ plot(unmark(childcare_ck_ppp.km),
 plot(unmark(childcare_jw_ppp.km), 
   main="Jurong West")
 ```
+
 ## Clark and EVans Test
-```{r}
 
-
-
-
-
-
-
-
-
-
-
-
+\`\`\`{r}

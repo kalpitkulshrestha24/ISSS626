@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Kalpit Kulshrestha">
+<meta name="dcterms.date" content="2025-09-16">
 
-<title>Take-Home Exercise 1 – ISSS626</title>
+<title>Take-Home Exercise 1 - Geospatial Analytics for Public Good – ISSS626</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -99,8 +135,24 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
         <li>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 1/In-class_Ex01.html">
+ <span class="dropdown-text">In-class Exercise 01</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 2/In-class_Ex02.html">
+ <span class="dropdown-text">In-class Exercise 02</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 3/In-class_Ex03a.html">
- <span class="dropdown-text">In-class Exercise 03</span></a>
+ <span class="dropdown-text">In-class Exercise 03A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 3/In-class_Ex03b.html">
+ <span class="dropdown-text">In-class Exercise 03B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="K:/kalpitkulshrestha24/ISSS626/_site/In-class Exercise/In-class Exercise 4/In-class Ex04.html">
+ <span class="dropdown-text">In-class Exercise 4</span></a>
   </li>  
     </ul>
   </li>
@@ -109,7 +161,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Take Home Exercise</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
-        <li class="dropdown-header">Take Home Exercise 1</li>
+        <li>
+    <a class="dropdown-item" href="../../Take Home Exercise/Take-Home Exercise 3/Take-Home EXercise 3A.html">
+ <span class="dropdown-text">Take Home Exercise 3A</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -133,7 +188,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX03/Hands-on EX03.html">
  <span class="dropdown-text">Hands-on Exercise 3</span></a>
   </li>  
-        <li class="dropdown-header">Hands-on Exercise 4</li>
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX04/Hands-on EX04.html">
+ <span class="dropdown-text">Hands-on Exercise 4</span></a>
+  </li>  
         <li class="dropdown-header">Hands-on Exercise 5</li>
         <li class="dropdown-header">Hands-on Exercise 6</li>
         <li class="dropdown-header">Hands-on Exercise 7</li>
@@ -166,15 +224,26 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#installing-the-packages-into-r-environment" id="toc-installing-the-packages-into-r-environment" class="nav-link" data-scroll-target="#installing-the-packages-into-r-environment">Installing the packages into R environment</a></li>
+  <li><a href="#downloading-data-and-preparing-data" id="toc-downloading-data-and-preparing-data" class="nav-link" data-scroll-target="#downloading-data-and-preparing-data">Downloading data and preparing data</a>
+  <ul class="collapse">
+  <li><a href="#preparing-and-tidying-the-data" id="toc-preparing-and-tidying-the-data" class="nav-link" data-scroll-target="#preparing-and-tidying-the-data">Preparing and tidying the data</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Take-Home Exercise 1</h1>
+<h1 class="title">Take-Home Exercise 1 - Geospatial Analytics for Public Good</h1>
 </div>
 
 
@@ -188,7 +257,19 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 16, 2025</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">September 22, 2025</p>
+    </div>
+  </div>
     
   </div>
   
@@ -197,8 +278,72 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="objectives" class="level1">
+<h1>Objectives</h1>
+<p>In this take-home exercise, we are interested to investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore for the first six months of 2025</p>
+<p>The specific objectives of this take-home exercise are as follows:</p>
+<ul>
+<li>To identify the “where” and “when” of new business entities, revealing clusters, patterns, and trends that are crucial for informed urban planning, resource allocation, and economic development.</li>
+<li>To identify complex interaction patterns and emergent phenomena in the distribution of new businesses beyond simple proximity or density, such as clustering of related businesses, the influence of past trends on future locations, and the overall structural development of commercial areas, which are crucial for scientific urban planning and policy-making.</li>
+</ul>
+</section>
+<section id="installing-the-packages-into-r-environment" class="level1">
+<h1>Installing the packages into R environment</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="downloading-data-and-preparing-data" class="level1">
+<h1>Downloading data and preparing data</h1>
+<p>The 3 business I have selected for this exercise are <strong>Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)</strong>.</p>
+<section id="preparing-and-tidying-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-and-tidying-the-data">Preparing and tidying the data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>section_E <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 83190 Columns: 53
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (49): uen, issuance_agency_id, entity_name, entity_type_description, bu...
+dbl   (2): primary_ssic_code, no_of_officers
+date  (2): registration_incorporation_date, uen_issue_date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>section_G <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 81783 Columns: 53
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (49): uen, issuance_agency_id, entity_name, entity_type_description, bu...
+dbl   (2): primary_ssic_code, no_of_officers
+date  (2): registration_incorporation_date, uen_issue_date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>section_H <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 90798 Columns: 53
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (49): uen, issuance_agency_id, entity_name, entity_type_description, bu...
+dbl   (2): primary_ssic_code, no_of_officers
+date  (2): registration_incorporation_date, uen_issue_date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

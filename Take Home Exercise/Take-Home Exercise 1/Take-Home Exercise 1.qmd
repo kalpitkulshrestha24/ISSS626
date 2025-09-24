@@ -1,0 +1,55 @@
+---
+title: "Take-Home Exercise 1 - Geospatial Analytics for Public Good"
+author: "Kalpit Kulshrestha"
+date: "16/september/2025"
+date-modified: "last-modified"
+---
+# Objectives
+
+In this take-home exercise, we are interested to investigate the spatial and spatio-temporal patterns of new businesses and firms established in Singapore for the first six months of 2025
+
+The specific objectives of this take-home exercise are as follows:
+
+- To identify the “where” and “when” of new business entities, revealing clusters, patterns, and trends that are crucial for informed urban planning, resource allocation, and economic development.
+- To identify complex interaction patterns and emergent phenomena in the distribution of new businesses beyond simple proximity or density, such as clustering of related businesses, the influence of past trends on future locations, and the overall structural development of commercial areas, which are crucial for scientific urban planning and policy-making.
+
+# Installing the packages into R environment
+```{r}
+pacman::p_load(sf,tmap, tidyverse, rvest, terra, spatstat, sparr, spdep, knitr)
+```
+# Downloading data and preparing data
+The 3 business I have selected for this exercise are **Section E(Water supply; sewerage, waste management and remediation activities), Section G(Wholesale and retail trade), Section H transportation and storage)**.
+
+
+
+
+## Preparing and tidying the data
+
+```{r}
+section_E <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_E.csv")
+```
+```{r}
+section_G <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_G.csv")
+```
+
+```{r}
+section_H <- read_csv("K:/kalpitkulshrestha24/ISSS626/Take Home Exercise/Take-Home Exercise 1/data/aspatial/acra/ACRA Information on Corporate Entities_H.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

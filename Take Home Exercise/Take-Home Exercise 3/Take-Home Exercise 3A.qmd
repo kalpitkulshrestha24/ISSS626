@@ -1,5 +1,0 @@
----
-title: "Take-Home Exercise 1"
-author: "Kalpit Kulshrestha"
-date: "14/september/2025"
----
