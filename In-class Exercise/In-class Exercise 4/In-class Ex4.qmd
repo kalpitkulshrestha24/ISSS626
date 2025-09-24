@@ -231,7 +231,13 @@ tm_shape(hunan_gstat) +
 ```
 # Geographically Weighted Correlation
 
-
+```{r}
+hunan2012 <- hunan2012 %>%
+  mutate(
+    Agri  = as.numeric(gsub("[^0-9.]", "", as.character(Agri))),
+    GDPPC = as.numeric(gsub("[^0-9.]", "", as.character(GDPPC)))
+  )
+```
 below code of chunk I am getting some error because one or both *agri* and *GDPPC* isn;t numeric. `ggscatterstats` draws marginal histogram using `stat_xsidein()`, which requires contiuous (numeric) data.
 
 ```{r}
