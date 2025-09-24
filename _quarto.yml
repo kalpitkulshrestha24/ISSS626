@@ -42,8 +42,8 @@ website:
     right:
       - icon: linkedin
         href: "https://www.linkedin.com/in/kalpit-kulshrestha-a1297b178/"
-      - href: index.qmd
-        text: Home
+      - text: "Home"
+        href: index.qmd
       - about.qmd
 
 format:
