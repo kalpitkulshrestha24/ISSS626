@@ -44,7 +44,7 @@ mpsz  <- st_transform(mpsz,  crs = 3414)
 ### Importing polyline feature data in shapefile form for Preschoolslocation dataset
 
 ```{r}
-preschool = st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
+preschool <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
 ```
 
 ## A simple feature dataframe
