@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kalpit Kulshrestha">
 
-<title>Hands-on Exercise 01A – ISSS626</title>
+<title>Hands-on Exercise 01A – ISSS626- GAA</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">ISSS626</span>
+    <span class="navbar-title">ISSS626- GAA</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -150,8 +150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">In-class Exercise 03B</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 4/In-class Ex4.html">
- <span class="dropdown-text">In-class Exercise 4</span></a>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 4/In-class_Ex04.html">
+ <span class="dropdown-text">In-class Exercise 04</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 5/In-class_Ex05.html">
+ <span class="dropdown-text">In-class Exercise 05</span></a>
   </li>  
     </ul>
   </li>
@@ -191,7 +195,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX04/Hands-on EX04.html">
  <span class="dropdown-text">Hands-on Exercise 4</span></a>
   </li>  
-        <li class="dropdown-header">Hands-on Exercise 5</li>
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX04/Hands-on EX05.html">
+ <span class="dropdown-text">Hands-on Exercise 5</span></a>
+  </li>  
         <li class="dropdown-header">Hands-on Exercise 6</li>
         <li class="dropdown-header">Hands-on Exercise 7</li>
         <li class="dropdown-header">Hands-on Exercise 8</li>
@@ -420,7 +427,7 @@ PROJCRS["SVY21",
 <section id="importing-polyline-feature-data-in-shapefile-form-for-preschoolslocation-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polyline-feature-data-in-shapefile-form-for-preschoolslocation-dataset">Importing polyline feature data in shapefile form for Preschoolslocation dataset</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>preschool <span class="ot">=</span> <span class="fu">st_read</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>preschool <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `PRESCHOOLS_LOCATION' from data source 
   `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on_EX01\data\geospatial\PreSchoolslocation\PreSchoolsLocation.kml' 
