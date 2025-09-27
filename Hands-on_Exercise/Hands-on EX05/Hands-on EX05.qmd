@@ -1,0 +1,12 @@
+---
+title: "Hands-on EX05"
+date: "25/september/2025"
+
+---
+# overview
+In this hands-on exercise, you will learn how to compute Global Measures of Spatial Autocorrelation (GMSA) by using spdep package. By the end to this hands-on exercise, you will be able to:
+
+
+
+
+

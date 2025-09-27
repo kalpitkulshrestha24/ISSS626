@@ -1,0 +1,51 @@
+---
+title: "In-class Exercise 5"
+author: "Kalpit Kulshrestha"
+date: "27/September/2025"
+date-modified: "last-modified"
+---
+# overview
+In-class exercise 05 of week 5.
+
+
+# Installing the packages
+```{r}
+pacman::p_load(sf, sfdep, tmap, tidyverse)
+```
+
+# The Data
+
+```{r}
+hunan_sf <- st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/In-class Exercise/In-class Exercise 5/data/geospatial", 
+                 layer = "Hunan")
+```
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+```{r}
+hunan_sf <- left_join(hunan_sf, hunan2012) %>%
+  select(1:7, 7, 15)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
