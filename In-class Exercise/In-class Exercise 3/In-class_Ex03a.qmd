@@ -10,11 +10,6 @@ execute:
   freeze: true
 ---
 
-
-
-
-
-
 ```{r}
 pacman::p_load(sf, terra, spatstat, 
                tmap, rvest, tidyverse,
