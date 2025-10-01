@@ -1,6 +1,8 @@
 ---
 title: "Hands-on EX05A - Global Measures of Spatial Autocorrelation"
+author: "Kalpit Kulshrestha"
 date: "25/september/2025"
+date-modified: "last-modified"
 ---
 
 # Overview
@@ -51,7 +53,7 @@ hunan <- left_join(hunan, hunan2012) %>%
   select(1:4, 7, 15)
 ```
 
-::: callout-note 
+::: callout-note
 `Select()` is used to define column number index to which index.
 :::
 
@@ -114,16 +116,15 @@ rswm_q
 ```
 
 ::: callout-note
+-   The input of nb2listw() must be an object of class nb. The syntax of the function has two major arguments, namely style and zero.poly.
 
-- The input of nb2listw() must be an object of class nb. The syntax of the function has two major arguments, namely style and zero.poly. 
+-   style can take values “W”, “B”, “C”, “U”, “minmax” and “S”. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al. 1999, p. 167-168 (sums over all links to n).
 
-- style can take values “W”, “B”, “C”, “U”, “minmax” and “S”. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al. 1999, p. 167-168 (sums over all links to n).
-
-- If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row t(rep(0, length=length(neighbours))) %\*% x, for arbitrary numerical vector x of length length(neighbours). The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
-
+-   If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row t(rep(0, length=length(neighbours))) %\*% x, for arbitrary numerical vector x of length length(neighbours). The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
 :::
 
 # Global Measures of Spatial Autocorrelation: Moran’s I
+
 in this section, we will learn and perform Moran's I statistics testing using `moran.test()` of spdep.
 
 ## Moran's I test
@@ -134,13 +135,14 @@ moran.test(hunan$GDPPC,
            zero.policy = TRUE, 
            na.action=na.omit)
 ```
+
 **Question: What statistical conclusion can you draw from the output above?**
 
 **ANswer: There is strong and significant positive spatial autocorrelation in GDP per capita across Hunan counties — regions with high (or low) GDPPC are spatially clustered, not randomly distributed.**
 
-##  Computing Monte Carlo Moran’s I
-The code chunk below performs permutation test for Moran’s I statistic by using `moran.mc()` of spdep. A total of 1000 simulation will be performed.
+## Computing Monte Carlo Moran’s I
 
+The code chunk below performs permutation test for Moran’s I statistic by using `moran.mc()` of spdep. A total of 1000 simulation will be performed.
 
 ```{r}
 set.seed(1234)
@@ -151,24 +153,27 @@ bperm= moran.mc(hunan$GDPPC,
                 na.action=na.omit)
 bperm
 ```
+
 **Question: What statistical conclusion can you draw from the output above?**
 
 **ANswer: The Monte Carlo simulation of Moran’s I confirms the earlier result. The observed Moran’s I statistic is 0.30075, and with 1,000 random permutations, the p-value is 0.001. This means the likelihood of getting such a strong positive spatial autocorrelation by chance is extremely low. Hence, GDP per capita in Hunan shows significant positive spatial clustering — areas with similar economic performance are geographically concentrated rather than randomly distributed.**
 
 ## Visualising Monte Carlo Moran's I
 
-It is always a good practice for us to examine the simulated Moran’s I test statistics in greater detail. This can be achieved by plotting the distribution of the simulated values as a histogram using the code chunk below.
-In the code chunk, the `hist()` function from R Graphics is used to plot the distribution of Moran’s I values, while `abline()` is applied to indicate the observed statistic on the plot for easy comparison.
+It is always a good practice for us to examine the simulated Moran’s I test statistics in greater detail. This can be achieved by plotting the distribution of the simulated values as a histogram using the code chunk below. In the code chunk, the `hist()` function from R Graphics is used to plot the distribution of Moran’s I values, while `abline()` is applied to indicate the observed statistic on the plot for easy comparison.
 
 ```{r}
 mean(bperm$res[1:999])
 ```
+
 ```{r}
 var(bperm$res[1:999])
 ```
+
 ```{r}
 summary(bperm$res[1:999])
 ```
+
 ```{r}
 hist(bperm$res,
      freq = TRUE,
@@ -177,10 +182,10 @@ hist(bperm$res,
 abline(v=0,
        col="red")
 ```
-### Challenge  
+
+### Challenge
 
 Using Base Graph to plot the values, plot the values by using `ggplot2` package
-
 
 ```{r}
 ggplot(data.frame(sim = bperm$res), aes(x = sim)) +
@@ -192,16 +197,18 @@ ggplot(data.frame(sim = bperm$res), aes(x = sim)) +
 
 # Global Measures of Spatial Autocorrelation: Geary’s C
 
-
 ## Geary's C test
+
 The code chunk below performs Geary’s C test for spatial autocorrelation by using `geary.test()` of spdep.
 
 ```{r}
 geary.test(hunan$GDPPC,listw = rswm_q)
 ```
+
 **Statistical Conclusion:** GDP per capita in Hunan exhibits significant positive spatial autocorrelation, confirming that economically similar counties tend to cluster together geographically.
 
 ## Computing Monte CArlo Geary's C
+
 ```{r}
 set.seed(1234)
 bperm=geary.mc(hunan$GDPPC, 
@@ -209,16 +216,21 @@ bperm=geary.mc(hunan$GDPPC,
                nsim=999)
 bperm
 ```
+
 ## Visualising the Monte Carlo Geary's C
+
 ```{r}
 mean(bperm$res[1:999])
 ```
+
 ```{r}
 var(bperm$res[1:999])
 ```
+
 ```{r}
 summary(bperm$res[1:999])
 ```
+
 ```{r}
 hist(bperm$res, freq=TRUE, breaks=20, xlab="Simulated Geary c")
 abline(v=1, col="red") 
@@ -227,6 +239,7 @@ abline(v=1, col="red")
 # Spatial Correlogram
 
 ## Compute Moran's I correlogram
+
 we use here `sp.correlogram()` function of spdep package is used to compute a 6-lag spatial correlogram of GDPPC.
 
 ```{r}
@@ -254,12 +267,7 @@ GC_corr <- sp.correlogram(wm_q,
                           style="W")
 plot(GC_corr)
 ```
+
 ```{r}
 print(GC_corr)
 ```
-
-
-
-
-
-
