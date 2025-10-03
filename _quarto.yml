@@ -28,9 +28,9 @@ website:
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"
-            href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01.html"
+            href: "Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01.html"
           - text: "Hands-on Exercise 1B"
-            href: "Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01b.html"
+            href: "Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01b.html"
           - text: "Hands-on Exercise 2A"
             href: "Hands-on_Exercise/Hands-on EX02/Chapter 04.html"
           - text: "Hands-on Exercise 3"
@@ -42,6 +42,7 @@ website:
           - text: "Hands-on Exercise 5B"
             href: "Hands-on_Exercise/Hands-on EX05/Hands-on EX05B.html"
           - text: "Hands-on Exercise 6"
+            href: "Hands-on_Exercise/Hands-on EX06/Hands-on EX06.html"
           - text: "Hands-on Exercise 7"
     right:
       - icon: linkedin
