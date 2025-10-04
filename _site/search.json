@@ -2,14 +2,14 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS626 - GAA",
+    "title": "ISSS626 - Geospatial Analytics and Application",
     "section": "",
     "text": "Welcome! to the ISSS626 Geospatial Analytics & Application module. In this website, you will find the my coursework and Hands-on Exercise of this module of every week prepared for this course."
   },
   {
     "objectID": "index.html#spatial-data-analytics",
     "href": "index.html#spatial-data-analytics",
-    "title": "ISSS626 - GAA",
+    "title": "ISSS626 - Geospatial Analytics and Application",
     "section": "Spatial Data Analytics",
     "text": "Spatial Data Analytics\n\n\n\n(Image source: CVRD)"
   },
@@ -775,5 +775,12 @@
     "title": "In-class Exercise 5: Global and Local Measures of Spatial Autocorrelation: sfdep methods",
     "section": "Hot Spot and Cold Spot Area Analysis (HCSA)",
     "text": "Hot Spot and Cold Spot Area Analysis (HCSA)\n\n\nHCSA uses spatial weights to identify locations of statistically significant hot spots and cold spots in an spatially weighted attribute that are in proximity to one another based on a calculated distance. The analysis groups features when similar high (hot) or low (cold) values are found in a cluster. The polygon features usually represent administration boundaries or a custom grid structure.\n\n\n\n\n\n\nComputing local Gi* statistics\nAs usual, we will need to derive a spatial weight matrix before we can compute local Gi* statistics. Code chunk below will be used to derive a spatial weight matrix by using sfdep functions and tidyverse approach.\n\n\nwm_idw &lt;- hunan_GDPPC %&gt;%\n  mutate(nb = include_self(\n    st_contiguity(geometry)),\n    wts = st_inverse_distance(nb, \n                              geometry, \n                              scale = 1,\n                              alpha = 1),\n         .before = 1)\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nGi* and local Gi* are distance-based spatial statistics. Hence, distance methods instead of contiguity methods should be used to derive the spatial weight matrix.\nSince we are going to compute Gi* statistics, include_self()is used.\n\n\n\n\n\n\nComputing local Gi* statistics\nNow, we will compute the local Gi* by using the code chunk below.\n\n\nHCSA &lt;- wm_idw %&gt;% \n  mutate(local_Gi = local_gstar_perm(\n    GDPPC, nb, wts, nsim = 99),\n         .before = 1) %&gt;%\n  unnest(local_Gi)\nHCSA\n\n\n\n\n\nVisualising Gi*\n\n\nIn the code chunk below, tmap functions are used to plot the local Gi* (i.e. gi_star) at the province level.\n\n\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_fill(\"gi_star\") + \n  tm_borders(alpha = 0.5) +\n  tm_view(set.zoom.limits = c(6,8))\n\n\n\n\n\n\n\n\n\nVisualising p-value of HCSA\n\n\nIn the code chunk below, tmap functions are used to plot the p-values of local Gi* (i.e. p_sim) at the province level.\n\n\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_fill(\"p_sim\") + \n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n\nVisuaising local HCSA\nFor effective comparison, you can plot both maps next to each other as shown below.\n\nThe plotThe code\n\n\n\n\n\n\n\ntmap_mode(\"plot\")\nmap1 &lt;- tm_shape(HCSA) +\n  tm_fill(\"gi_star\") + \n  tm_borders(alpha = 0.5) +\n  tm_view(set.zoom.limits = c(6,8)) +\n  tm_layout(main.title = \"Gi* of GDPPC\",\n            main.title.size = 0.8)\n\nmap2 &lt;- tm_shape(HCSA) +\n  tm_fill(\"p_value\",\n          breaks = c(0, 0.001, 0.01, 0.05, 1),\n              labels = c(\"0.001\", \"0.01\", \"0.05\", \"Not sig\")) + \n  tm_borders(alpha = 0.5) +\n  tm_layout(main.title = \"p-value of Gi*\",\n            main.title.size = 0.8)\n\ntmap_arrange(map1, map2, ncol = 2)\n\n\n\n\n\n\n\n\nVisualising hot spot and cold spot areas\n\n\nNow, we are ready to plot the significant (i.e. p-values less than 0.05) hot spot and cold spot areas by using appropriate tmap functions as shown below.\n\n\nHCSA_sig &lt;- HCSA  %&gt;%\n  filter(p_sim &lt; 0.05)\ntmap_mode(\"plot\")\ntm_shape(HCSA) +\n  tm_polygons() +\n  tm_borders(alpha = 0.5) +\ntm_shape(HCSA_sig) +\n  tm_fill(\"cluster\") + \n  tm_borders(alpha = 0.4)\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nFigure above reveals that there is one hot spot area and two cold spot areas. Interestingly, the hot spot areas coincide with the High-high cluster identifies by using local Moran’s I method in the earlier sub-section."
+  },
+  {
+    "objectID": "In-class Exercise/In-class Exercise 6/In-class Exercise 6.html",
+    "href": "In-class Exercise/In-class Exercise 6/In-class Exercise 6.html",
+    "title": "In-class Exercise 6",
+    "section": "",
+    "text": "#In-class exercise 6 ## Innstalling the required package\n\npacman::p_load(sf, tidyverse, tmap, sfdep, knitr)\n\n\nBusstop = st_read(dsn = \"data/LTADataMall/\",\n                  layer = \"BusStop\")\n\nReading layer `BusStop' from data source \n  `K:\\kalpitkulshrestha24\\ISSS626\\In-class Exercise\\In-class Exercise 6\\data\\LTADataMall' \n  using driver `ESRI Shapefile'\nSimple feature collection with 5172 features and 2 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 3970.122 ymin: 26482.1 xmax: 48285.52 ymax: 52983.82\nProjected CRS: SVY21\n\n\n\nmpsz = read_rds(\"data/rds/mpsz_sf.rds\")\n\n\nodbus &lt;- read_csv(\"data/LTADataMall/transport_node_bus_202508.csv\")\n\nRows: 201230 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): YEAR_MONTH, DAY_TYPE, PT_TYPE, PT_CODE\ndbl (3): TIME_PER_HOUR, TOTAL_TAP_IN_VOLUME, TOTAL_TAP_OUT_VOLUME\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
   }
 ]

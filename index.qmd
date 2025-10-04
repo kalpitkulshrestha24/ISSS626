@@ -1,5 +1,5 @@
 ---
-title: "ISSS626 - GAA"
+title: "ISSS626 - Geospatial Analytics and Application"
 author: "Kalpit Kulshrestha"
 date: "04/Sept/2025"
 date-modified: "last-modified"
