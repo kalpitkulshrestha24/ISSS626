@@ -154,7 +154,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">In-class Exercise 04</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 5/In-class_Ex05.html">
+    <a class="dropdown-item" href="../../In-class Exercise/In-class Exercise 5/In-class Exercise 5.html">
  <span class="dropdown-text">In-class Exercise 05</span></a>
   </li>  
     </ul>
@@ -176,11 +176,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
         <li>
-    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01.html">
+    <a class="dropdown-item" href="../../_site/Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01.html">
  <span class="dropdown-text">Hands-on Exercise 1A</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on_EX01/Hands-on exercise 01b.html">
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01b.html">
  <span class="dropdown-text">Hands-on Exercise 1B</span></a>
   </li>  
         <li>
@@ -199,9 +199,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX05/Hands-on EX05A.html">
  <span class="dropdown-text">Hands-on Exercise 5A</span></a>
   </li>  
-        <li class="dropdown-header">Hands-on Exercise 6</li>
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX05/Hands-on EX05B.html">
+ <span class="dropdown-text">Hands-on Exercise 5B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Exercise/Hands-on EX06/Hands-on EX06.html">
+ <span class="dropdown-text">Hands-on Exercise 6</span></a>
+  </li>  
         <li class="dropdown-header">Hands-on Exercise 7</li>
-        <li class="dropdown-header">Hands-on Exercise 8</li>
     </ul>
   </li>
 </ul>
@@ -304,11 +310,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="importing-polygon-feature-data-for-masterplan" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polygon-feature-data-for-masterplan">Importing Polygon feature data for Masterplan</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/MasterPlan2014SubzoneBoundaryWebSHP"</span>, </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/MasterPlan2014SubzoneBoundaryWebSHP"</span>, </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">layer =</span> <span class="st">"MP14_SUBZONE_WEB_PL"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `MP14_SUBZONE_WEB_PL' from data source 
-  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on_EX01\data\geospatial\MasterPlan2014SubzoneBoundaryWebSHP' 
+  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on EX01\data\geospatial\MasterPlan2014SubzoneBoundaryWebSHP' 
   using driver `ESRI Shapefile'
 Simple feature collection with 323 features and 15 fields
 Geometry type: MULTIPOLYGON
@@ -364,10 +370,10 @@ PROJCRS["SVY21",
 <section id="importing-polyline-feature-data-in-shapefile-form-for-cycling" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polyline-feature-data-in-shapefile-form-for-cycling">Importing polyline feature data in shapefile form for Cycling</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Cyclingpath <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/CyclingPath_Apr2025"</span>, <span class="at">layer =</span> <span class="st">"CyclingPathGazette"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Cyclingpath <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/CyclingPath_Apr2025"</span>, <span class="at">layer =</span> <span class="st">"CyclingPathGazette"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `CyclingPathGazette' from data source 
-  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on_EX01\data\geospatial\CyclingPath_Apr2025' 
+  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on EX01\data\geospatial\CyclingPath_Apr2025' 
   using driver `ESRI Shapefile'
 Simple feature collection with 4651 features and 19 fields
 Geometry type: MULTILINESTRING
@@ -427,10 +433,10 @@ PROJCRS["SVY21",
 <section id="importing-polyline-feature-data-in-shapefile-form-for-preschoolslocation-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="importing-polyline-feature-data-in-shapefile-form-for-preschoolslocation-dataset">Importing polyline feature data in shapefile form for Preschoolslocation dataset</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>preschool <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>preschool <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `PRESCHOOLS_LOCATION' from data source 
-  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on_EX01\data\geospatial\PreSchoolslocation\PreSchoolsLocation.kml' 
+  `K:\kalpitkulshrestha24\ISSS626\Hands-on_Exercise\Hands-on EX01\data\geospatial\PreSchoolslocation\PreSchoolsLocation.kml' 
   using driver `KML'
 Simple feature collection with 2290 features and 2 fields
 Geometry type: POINT
@@ -779,7 +785,7 @@ First 5 geometries:</code></pre>
 <section id="importing-and-converting-an-aspatial-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-and-converting-an-aspatial-data">Importing and Converting An Aspatial Data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>listings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/aspatial/listings.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>listings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/aspatial/listings.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 3659 Columns: 18
 ── Column specification ────────────────────────────────────────────────────────

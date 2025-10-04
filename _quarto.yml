@@ -28,7 +28,7 @@ website:
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"
-            href: "Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01.html"
+            href: "_site/Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01.html"
           - text: "Hands-on Exercise 1B"
             href: "Hands-on_Exercise/Hands-on EX01/Hands-on exercise 01b.html"
           - text: "Hands-on Exercise 2A"

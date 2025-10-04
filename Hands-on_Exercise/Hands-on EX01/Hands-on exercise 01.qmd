@@ -16,7 +16,7 @@ pacman::p_load(sf, tidyverse)
 ### Importing Polygon feature data for Masterplan
 
 ```{r}
-mpsz = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/MasterPlan2014SubzoneBoundaryWebSHP", 
+mpsz = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/MasterPlan2014SubzoneBoundaryWebSHP", 
                   layer = "MP14_SUBZONE_WEB_PL")
 
 ```
@@ -28,7 +28,7 @@ st_crs(mpsz)
 ### Importing polyline feature data in shapefile form for Cycling
 
 ```{r}
-Cyclingpath = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/CyclingPath_Apr2025", layer = "CyclingPathGazette")
+Cyclingpath = st_read(dsn = "K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/CyclingPath_Apr2025", layer = "CyclingPathGazette")
 
 ```
 
@@ -44,7 +44,7 @@ mpsz  <- st_transform(mpsz,  crs = 3414)
 ### Importing polyline feature data in shapefile form for Preschoolslocation dataset
 
 ```{r}
-preschool <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
+preschool <- st_read("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/geospatial/PreSchoolslocation/PreSchoolslocation.kml")
 ```
 
 ## A simple feature dataframe
@@ -121,7 +121,7 @@ plot(st_geometry(preschool), add = TRUE)
 ## Importing and Converting An Aspatial Data
 
 ```{r}
-listings <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on_EX01/data/aspatial/listings.csv")
+listings <- read_csv("K:/kalpitkulshrestha24/ISSS626/Hands-on_Exercise/Hands-on EX01/data/aspatial/listings.csv")
 list(listings)
 ```
 
