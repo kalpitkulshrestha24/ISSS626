@@ -247,8 +247,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#joining_left" id="toc-joining_left" class="nav-link active" data-scroll-target="#joining_left">joining_left</a></li>
+  <li><a href="#deriving-analytical-heaxagon" id="toc-deriving-analytical-heaxagon" class="nav-link" data-scroll-target="#deriving-analytical-heaxagon">Deriving Analytical Heaxagon</a></li>
+  <li><a href="#filtering-hexagon-with-bus-stops" id="toc-filtering-hexagon-with-bus-stops" class="nav-link" data-scroll-target="#filtering-hexagon-with-bus-stops">filtering hexagon with bus stops</a></li>
+  <li><a href="#assigning-ids-to-each-hexagon" id="toc-assigning-ids-to-each-hexagon" class="nav-link" data-scroll-target="#assigning-ids-to-each-hexagon">Assigning ids to each hexagon</a></li>
+  <li><a href="#preparing-trip-generation-data" id="toc-preparing-trip-generation-data" class="nav-link" data-scroll-target="#preparing-trip-generation-data">Preparing Trip Generation Data</a>
+  <ul class="collapse">
+  <li><a href="#cleaning-the-data" id="toc-cleaning-the-data" class="nav-link" data-scroll-target="#cleaning-the-data">Cleaning the data</a></li>
+  </ul></li>
+  <li><a href="#adding-hex_id-into-bus-trips-data" id="toc-adding-hex_id-into-bus-trips-data" class="nav-link" data-scroll-target="#adding-hex_id-into-bus-trips-data">adding HEX_ID into bus trips data</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -284,7 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Busstop <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/LTADataMall/"</span>,</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">layer =</span> <span class="st">"BusStop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">layer =</span> <span class="st">"BusStop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `BusStop' from data source 
   `K:\kalpitkulshrestha24\ISSS626\In-class Exercise\In-class Exercise 6\data\LTADataMall' 
@@ -297,23 +312,368 @@ Projected CRS: SVY21</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_sf.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_sf.rds"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mpsz)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 327
+Columns: 5
+$ REGION_N   &lt;chr&gt; "CENTRAL REGION", "CENTRAL REGION", "CENTRAL REGION", "CENT…
+$ PLN_AREA_N &lt;chr&gt; "BUKIT MERAH", "BUKIT MERAH", "OUTRAM", "DOWNTOWN CORE", "D…
+$ SUBZONE_N  &lt;chr&gt; "DEPOT ROAD", "BUKIT MERAH", "CHINATOWN", "PHILLIP", "RAFFL…
+$ SUBZONE_C  &lt;chr&gt; "BMSZ12", "BMSZ02", "OTSZ03", "DTSZ04", "DTSZ05", "OTSZ04",…
+$ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((25910.34 29..., MULTIPOLYGON (…</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>odbus <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/LTADataMall/transport_node_bus_202508.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>odbus <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/LTADataMall/origin_destination_bus_202508.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Rows: 201230 Columns: 7
+<pre><code>Rows: 5876969 Columns: 7
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
-chr (4): YEAR_MONTH, DAY_TYPE, PT_TYPE, PT_CODE
-dbl (3): TIME_PER_HOUR, TOTAL_TAP_IN_VOLUME, TOTAL_TAP_OUT_VOLUME
+chr (5): YEAR_MONTH, DAY_TYPE, PT_TYPE, ORIGIN_PT_CODE, DESTINATION_PT_CODE
+dbl (2): TIME_PER_HOUR, TOTAL_TRIPS
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(Busstop) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="In-class-Exercise-6_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="joining_left" class="level2">
+<h2 class="anchored" data-anchor-id="joining_left">joining_left</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Busstop_in_sg <span class="ot">&lt;-</span> <span class="fu">st_join</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  Busstop, mpsz,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">join =</span> st_within,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">left =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>Busstop_in_sg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 5167 features and 6 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 3970.122 ymin: 26482.1 xmax: 48285.52 ymax: 49903.39
+Projected CRS: SVY21 / Singapore TM
+First 10 features:
+   BUS_STOP_N                 LOC_DESC          REGION_N  PLN_AREA_N
+1       65059             ST ANNE'S CH NORTH-EAST REGION    SENGKANG
+2       16171          YUSOF ISHAK HSE    CENTRAL REGION  QUEENSTOWN
+3       61101                  BLK 120    CENTRAL REGION   TOA PAYOH
+4       01239             SULTAN PLAZA    CENTRAL REGION     KALLANG
+5       17269                  BLK 730       WEST REGION    CLEMENTI
+6       11291      COLD STORAGE JELITA    CENTRAL REGION BUKIT TIMAH
+7       11531 OPP LEA HIN HARDWARE FTY    CENTRAL REGION  QUEENSTOWN
+8       46529        OPP MARSILING STN      NORTH REGION   WOODLANDS
+9       95151       AIRPORT POLICE STN       EAST REGION      CHANGI
+10      71169              AZTECH BLDG    CENTRAL REGION     GEYLANG
+                       SUBZONE_N SUBZONE_C                  geometry
+1                      RIVERVALE    SESZ02 POINT (35565.66 41659.52)
+2  NATIONAL UNIVERSITY OF S'PORE    QTSZ11 POINT (21439.91 31253.63)
+3                   POTONG PASIR    TPSZ09 POINT (31381.06 35313.49)
+4                       CRAWFORD    KLSZ09 POINT (31152.55 31688.08)
+5                  CLEMENTI WEST    CLSZ08  POINT (20134.2 31917.38)
+6                     ULU PANDAN    BTSZ04 POINT (22723.57 33349.85)
+7                       MEI CHIN    QTSZ06 POINT (25112.11 30368.68)
+8                      WOODGROVE    WDSZ05 POINT (21465.51 45974.12)
+9                 CHANGI AIRPORT    CHSZ03 POINT (44529.73 36038.38)
+10                   KAMPONG UBI    GLSZ03 POINT (34541.04 34361.09)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(Busstop_in_sg) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="In-class-Exercise-6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="deriving-analytical-heaxagon" class="level2">
+<h2 class="anchored" data-anchor-id="deriving-analytical-heaxagon">Deriving Analytical Heaxagon</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>hexagon <span class="ot">&lt;-</span> <span class="fu">st_make_grid</span>(mpsz,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cellsize =</span> <span class="dv">700</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">what =</span> <span class="st">"polygon"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">square =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sf</span>()     <span class="co">#to convert into simple dataframe</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="filtering-hexagon-with-bus-stops" class="level2">
+<h2 class="anchored" data-anchor-id="filtering-hexagon-with-bus-stops">filtering hexagon with bus stops</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hexagon<span class="sc">$</span>n_collisions <span class="ot">=</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    hexagon, Busstop_in_sg))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>hexagon <span class="ot">&lt;-</span> <span class="fu">filter</span>(hexagon, n_collisions <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="assigning-ids-to-each-hexagon" class="level2">
+<h2 class="anchored" data-anchor-id="assigning-ids-to-each-hexagon">Assigning ids to each hexagon</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>hexagon <span class="ot">&lt;-</span> hexagon <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(, n_collisions)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>hexagon<span class="sc">$</span>HEX_ID <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"H%04d"</span>, <span class="fu">seq_len</span>(<span class="fu">nrow</span>(hexagon))) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>()</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(hexagon))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">n_collisions</th>
+<th style="text-align: left;">geometry</th>
+<th style="text-align: left;">HEX_ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">POLYGON ((3717.538 27712.72…</td>
+<td style="text-align: left;">H0001</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">POLYGON ((4417.538 30137.6,…</td>
+<td style="text-align: left;">H0002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">POLYGON ((4767.538 28318.94…</td>
+<td style="text-align: left;">H0003</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">POLYGON ((4767.538 29531.38…</td>
+<td style="text-align: left;">H0004</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">POLYGON ((4767.538 30743.81…</td>
+<td style="text-align: left;">H0005</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">POLYGON ((4767.538 31956.25…</td>
+<td style="text-align: left;">H0006</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="preparing-trip-generation-data" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-trip-generation-data">Preparing Trip Generation Data</h2>
+<section id="cleaning-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="cleaning-the-data">Cleaning the data</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>trips <span class="ot">&lt;-</span> odbus <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">BUS_STOP_N =</span> ORIGIN_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">HOUR_OF_DAY =</span> TIME_PER_HOUR) <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">TRIPS =</span> TOTAL_TRIPS)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>trips<span class="sc">$</span>BUS_STOP_N <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(trips<span class="sc">$</span>BUS_STOP_N)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(trips))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">BUS_STOP_N</th>
+<th style="text-align: left;">DAY_TYPE</th>
+<th style="text-align: right;">HOUR_OF_DAY</th>
+<th style="text-align: right;">TRIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">84671</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10099</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">64601</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53009</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80051</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">70031</td>
+<td style="text-align: left;">WEEKDAY</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bs_hex <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  Busstop, hexagon) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(BUS_STOP_N, HEX_ID))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(bs_hex))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">BUS_STOP_N</th>
+<th style="text-align: left;">HEX_ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">3092</td>
+<td style="text-align: left;">25059</td>
+<td style="text-align: left;">H0001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">241</td>
+<td style="text-align: left;">26379</td>
+<td style="text-align: left;">H0002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2439</td>
+<td style="text-align: left;">25751</td>
+<td style="text-align: left;">H0003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2554</td>
+<td style="text-align: left;">25761</td>
+<td style="text-align: left;">H0003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2650</td>
+<td style="text-align: left;">25719</td>
+<td style="text-align: left;">H0004</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2651</td>
+<td style="text-align: left;">25711</td>
+<td style="text-align: left;">H0004</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-hex_id-into-bus-trips-data" class="level2">
+<h2 class="anchored" data-anchor-id="adding-hex_id-into-bus-trips-data">adding HEX_ID into bus trips data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>trips <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(trips, bs_hex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(BUS_STOP_N)`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in inner_join(trips, bs_hex): Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 65 of `x` matches multiple rows in `y`.
+ℹ Row 2725 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(trips))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">BUS_STOP_N</th>
+<th style="text-align: left;">DAY_TYPE</th>
+<th style="text-align: right;">HOUR_OF_DAY</th>
+<th style="text-align: right;">TRIPS</th>
+<th style="text-align: left;">HEX_ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">84671</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">H0852</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10099</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: left;">H0430</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">64601</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">H0701</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53009</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">H0588</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">80051</td>
+<td style="text-align: left;">WEEKENDS/HOLIDAY</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">H0666</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">70031</td>
+<td style="text-align: left;">WEEKDAY</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">H0698</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
