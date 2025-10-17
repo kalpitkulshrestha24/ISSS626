@@ -663,10 +663,13 @@ rect.hclust(nongeo_cluster,
             k = 6, 
             border = 2:5)
 ```
+
 #### Mapping the clusters formed
+
 ```{r}
 groups <- as.factor(cutree(nongeo_cluster, k=6))
 ```
+
 ```{r}
 shan_sf_ngeo_cluster <- cbind(shan_sf, as.matrix(groups)) %>%
   rename(`CLUSTER` = `as.matrix.groups.`)
@@ -675,7 +678,9 @@ shan_sf_ngeo_cluster <- cbind(shan_sf, as.matrix(groups)) %>%
 ```{r}
 qtm(shan_sf_ngeo_cluster, "CLUSTER")
 ```
+
 ### Spatially Constrained Hierarchical Clustering
+
 ```{r}
 dist <- st_distance(shan_sf, shan_sf)
 distmat <- as.dist(dist)
@@ -684,6 +689,7 @@ distmat <- as.dist(dist)
 ```{r}
 cr <- choicealpha(proxmat, distmat, range.alpha = seq(0, 1, 0.1), K=6, graph = TRUE)
 ```
+
 ```{r}
 clustG <- hclustgeo(proxmat, distmat, alpha = 0.2)
 ```
@@ -691,6 +697,7 @@ clustG <- hclustgeo(proxmat, distmat, alpha = 0.2)
 ```{r}
 groups <- as.factor(cutree(clustG, k=6))
 ```
+
 ```{r}
 shan_sf_Gcluster <- cbind(shan_sf, as.matrix(groups)) %>%
   rename(`CLUSTER` = `as.matrix.groups.`)
@@ -699,7 +706,8 @@ shan_sf_Gcluster <- cbind(shan_sf, as.matrix(groups)) %>%
 ```{r}
 qtm(shan_sf_Gcluster, "CLUSTER")
 ```
-##  Visual Interpretation of Clusters
+
+## Visual Interpretation of Clusters
 
 ### Visualising individual clustering variable
 
@@ -708,7 +716,9 @@ ggplot(data = shan_sf_ngeo_cluster,
        aes(x = CLUSTER, y = RADIO_PR)) +
   geom_boxplot()
 ```
+
 #### Multivariate Visualisation
+
 ```{r}
 ggparcoord(data = shan_sf_ngeo_cluster, 
            columns = c(17:21), 
@@ -719,6 +729,7 @@ ggparcoord(data = shan_sf_ngeo_cluster,
   facet_grid(~ CLUSTER) + 
   theme(axis.text.x = element_text(angle = 30))
 ```
+
 ```{r}
 shan_sf_ngeo_cluster %>% 
   st_set_geometry(NULL) %>%
@@ -729,21 +740,3 @@ shan_sf_ngeo_cluster %>%
             mean_MPHONE_PR = mean(MPHONE_PR),
             mean_COMPUTER_PR = mean(COMPUTER_PR))
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
