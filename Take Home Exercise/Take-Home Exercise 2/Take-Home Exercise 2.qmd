@@ -1,5 +1,5 @@
 ---
-title: "In-class Exercise 6"
+title: "Take_Home Exercise -2"
 author: "Kalpit Kulshrestha"
 ---
 
@@ -54,7 +54,7 @@ tm_shape(Busstop_in_sg) +
 ```{r}
 hexagon <- st_make_grid(mpsz,
                         cellsize = 375,
-                        what = "polygon",
+                        what = "polygons",
                         square = FALSE) %>%
   st_sf()     #to convert into simple dataframe
 ```
@@ -73,7 +73,7 @@ hexagon <- filter(hexagon, n_collisions > 0)
 
 ```{r}
 hexagon <- hexagon %>%
-  select(, n_collisions)
+  select(n_collisions)
 
 hexagon$HEX_ID <- sprintf(
   "H%04d", seq_len(nrow(hexagon))) %>%
@@ -246,16 +246,24 @@ library(spdep)
 set.seed(1234)
 
 # 1) Use your existing hex_agg, nb, wt  (no neighbor changes)
-hex_agg <- st_make_valid(hex_agg)
+hex_agg = st_make_valid(hex_agg)
 
 # 2) Clean the variables used in Moran's I (numeric, no NA)
 vars <- c("trips_wk_morn", "trips_wk_eve", "trips_we_hol")
 hex_use <- hex_agg %>%
   mutate(across(all_of(vars), ~ replace_na(as.numeric(.), 0)))
 
+# Build neighbors & weights first
+nb <- sfdep::st_contiguity(hex_agg)                     # or queen = TRUE if you prefer
+wt <- sfdep::st_weights(nb, style = "W", allow_zero = TRUE)
+
+# Convert to spdep listw (keeps your weights)
+lw <- spdep::nb2listw(nb, glist = wt, style = "W", zero.policy = TRUE)
+
+
 # 3) Convert existing nb (+ optional wt) to spdep listw (no topology changes)
 #    If 'wt' exists from st_weights(), pass it via glist so we keep your weights.
-lw <- nb2listw(nb, glist = wt, style = "W", zero.policy = TRUE)
+#lw <- nb2listw(nb, glist = wt, style = "W", zero.policy = TRUE)
 
 # 4) Tiny helper returning a tibble from spdep::localmoran()
 lisa_tbl <- function(x, lw) {
@@ -284,7 +292,7 @@ lisa_w <- hex_use %>%
   unnest(local_moran)
 ```
 
-
+nxnnx
 
 
 
