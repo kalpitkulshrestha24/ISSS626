@@ -25,7 +25,6 @@ website:
             href: "In-class Exercise/In-class Exercise 6/In-class Exercise 6.html"
           - text: "In-Class Exercise 07"
             href: "In-class Exercise/In-class Exercise 7/In-class EX07.html"
-
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"
@@ -52,7 +51,7 @@ website:
         menu: 
           - text: "Take Home Exercise 1"
             href: "Take Home Exercise/Take-Home Exercise 1/Take-Home Exercise 1.html"
-          - text: "Take Home EXercise 2"
+          - text: "Take Home Exercise 2"
             href: "Take Home Exercise/Take-Home Exercise 2/Take-Home Exercise 2.html"
     right:
       - icon: linkedin

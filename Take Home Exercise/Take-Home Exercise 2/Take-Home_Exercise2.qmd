@@ -1,6 +1,8 @@
 ---
-title: "Take_Home Exercise -2"
+title: "Take-Home Exercise-2"
 author: "Kalpit Kulshrestha"
+date: "16/0ct/2024"
+date-modified: "Last-modified"
 ---
 
 # In-class exercise 6 
@@ -293,7 +295,6 @@ lisa_w <- hex_use %>%
 ```
 
 nxnnx
-
 
 
 
