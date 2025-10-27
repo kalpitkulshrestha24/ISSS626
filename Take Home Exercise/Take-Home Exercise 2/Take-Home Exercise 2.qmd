@@ -1,0 +1,292 @@
+---
+title: "In-class Exercise 6"
+author: "Kalpit Kulshrestha"
+---
+
+# In-class exercise 6 
+## Innstalling the required package
+
+```{r}
+pacman::p_load(sf, tidyverse, tmap, sfdep, knitr)
+```
+
+```{r}
+Busstop = st_read(dsn = "data/LTADataMall/",
+                  layer = "BusStop") %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+mpsz = read_rds("data/rds/mpsz_sf.rds")
+glimpse(mpsz)
+```
+
+```{r}
+odbus <- read_csv("data/LTADataMall/origin_destination_bus_202508.csv")
+```
+
+```{r}
+tm_shape(mpsz) + 
+  tm_polygons() +
+tm_shape(Busstop) +
+  tm_dots()
+```
+
+## joining_left
+
+```{r}
+Busstop_in_sg <- st_join(
+  Busstop, mpsz,
+  join = st_within,
+  left = FALSE)
+Busstop_in_sg
+```
+
+```{r}
+tm_shape(mpsz) + 
+  tm_polygons() +
+tm_shape(Busstop_in_sg) +
+  tm_dots()
+```
+
+## Deriving Analytical Heaxagon
+
+```{r}
+hexagon <- st_make_grid(mpsz,
+                        cellsize = 375,
+                        what = "polygon",
+                        square = FALSE) %>%
+  st_sf()     #to convert into simple dataframe
+```
+
+## filtering hexagon with bus stops
+
+```{r}
+hexagon$n_collisions = 
+  lengths(st_intersects(
+    hexagon, Busstop_in_sg))
+
+hexagon <- filter(hexagon, n_collisions > 0)
+```
+
+## Assigning ids to each hexagon
+
+```{r}
+hexagon <- hexagon %>%
+  select(, n_collisions)
+
+hexagon$HEX_ID <- sprintf(
+  "H%04d", seq_len(nrow(hexagon))) %>%
+  as.factor()
+
+kable(head(hexagon))
+```
+
+## Preparing Trip Generation Data
+
+### Cleaning the data
+
+```{r}
+trips <- odbus %>%
+  select(c(ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
+  rename(BUS_STOP_N = ORIGIN_PT_CODE) %>%
+  rename(HOUR_OF_DAY = TIME_PER_HOUR) %>%
+  rename(TRIPS = TOTAL_TRIPS)
+trips$BUS_STOP_N <- as.factor(trips$BUS_STOP_N)
+kable(head(trips))
+```
+
+```{r}
+bs_hex <- st_intersection(
+  Busstop, hexagon) %>%
+  st_drop_geometry() %>%
+  select(c(BUS_STOP_N, HEX_ID))
+kable(head(bs_hex))
+```
+
+## adding HEX_ID into bus trips data
+
+```{r}
+trips <- inner_join(trips, bs_hex)
+kable(head(trips))
+```
+
+**setting the apothem**
+Here. `st_make_grid(cellsize = 375)` sets the grid spacing, not the apothem.
+For a 375 m apothem (center → edge), use width = 750 and height ≈ 866.0254.
+```{r}
+library(units); library(stringr)
+
+a <- set_units(375, "m")
+width_m  <- as.numeric(2 * a)                 # 750
+height_m <- as.numeric(4 * a / sqrt(3))       # ~866.0254
+
+hexagon <- st_make_grid(
+  mpsz,
+  cellsize = c(width_m, height_m),
+  what = "polygons",
+  square = FALSE
+) |>
+  st_sf() |>
+  st_intersection(st_union(mpsz)) |>
+  st_make_valid()
+
+hexagon$HEX_ID <- sprintf("H%05d", seq_len(nrow(hexagon)))
+```
+## Mapping the bus stop on the correct grid
+
+filtering by `DAY_TYPE` and hour ranges, sum trips per bus stop, then per hex.
+
+### Helper aggregator
+```{r}
+aggregate_window <- function(day_type, hr_min, hr_max, label){
+  trips |>
+    dplyr::filter(
+      (DAY_TYPE == day_type),
+      HOUR_OF_DAY >= hr_min, HOUR_OF_DAY < hr_max
+    ) |>
+    group_by(BUS_STOP_N) |>
+    summarise(TRIPS = sum(TRIPS, na.rm = TRUE), .groups = "drop") |>
+    left_join(bs_hex, by = "BUS_STOP_N") |>
+    group_by(HEX_ID) |>
+    summarise(Trips = sum(TRIPS, na.rm = TRUE), .groups = "drop") |>
+    mutate(window = label)
+}
+```
+
+
+```{r}
+wk_morn <- aggregate_window("WEEKDAY",             6,  9,  "wk_morn")
+wk_eve  <- aggregate_window("WEEKDAY",            17, 20,  "wk_eve")
+we_hol  <- aggregate_window("WEEKENDS/HOLIDAY",   11, 20,  "we_hol")
+```
+### Wide join back to hex polygons
+```{r}
+hex_agg <- hexagon |>
+  left_join(wk_morn |> select(HEX_ID, Trips) |> rename(trips_wk_morn = Trips), by="HEX_ID") |>
+  left_join(wk_eve  |> select(HEX_ID, Trips) |> rename(trips_wk_eve  = Trips), by="HEX_ID") |>
+  left_join(we_hol  |> select(HEX_ID, Trips) |> rename(trips_we_hol  = Trips), by="HEX_ID") |>
+  mutate(across(starts_with("trips_"), ~ tidyr::replace_na(., 0)))
+```
+
+## Geovisualise trip distributions
+
+choropleths for each window.
+`
+```{r}
+library(tmap); library(classInt); library(RColorBrewer)
+tmap_mode("plot")
+
+safe_breaks <- function(x, n = 5) {
+  x <- x[is.finite(x)]
+  ux <- sort(unique(x))
+  if (length(ux) <= 1) {
+    # One unique value → make a simple 2-break scale around it
+    v <- ifelse(length(ux) == 1, ux[1], 0)
+    # ensure strictly increasing breaks
+    return(c(v - 0.5, v + 0.5))
+  } else {
+    classInt::classIntervals(x, style = "quantile", n = min(n, length(ux)))$brks
+  }
+}
+
+plot_window <- function(data, value_col, title){
+  vals <- data[[value_col]]
+  # If all NA, show an empty map with message
+  if (all(!is.finite(vals))) {
+    return(
+      tm_shape(data) +
+        tm_polygons(col = NA) +
+        tm_layout(title = paste0(title, " — no data"), frame = FALSE)
+    )
+  }
+  brks <- safe_breaks(vals, n = 5)
+
+  tm_shape(data) +
+    tm_polygons(
+      col = value_col, palette = "YlOrRd",
+      style = "fixed", breaks = brks,
+      border.col = "grey30", lwd = 0.1,
+      legend.hist = TRUE, title = "Trips"
+    ) +
+    tm_layout(title = title, frame = FALSE)
+}
+
+map_morn <- plot_window(hex_agg, "trips_wk_morn", "Trips — Weekday Morning (06–09)")
+map_eve  <- plot_window(hex_agg, "trips_wk_eve",  "Trips — Weekday Evening (17–20)")
+map_we   <- plot_window(hex_agg, "trips_we_hol",  "Trips — Weekend/Holiday (11–20)")
+
+tmap_arrange(map_morn, map_eve, map_we, nrow = 1)
+```
+
+```{r}
+plot_window_cont <- function(data, value_col, title){
+  tm_shape(data) +
+    tm_polygons(
+      col = value_col, palette = "YlOrRd",
+      style = "cont", border.col = "grey30", lwd = 0.1,
+      title = "Trips"
+    ) +
+    tm_layout(title = title, frame = FALSE)
+}
+```
+
+## LMSA (Local Moran’s I) and significant clusters map
+
+Explanation: build neighbors, compute Local Moran’s I with permutation p-values, show only p<0.05 clusters.
+
+```{r}
+# 0) Packages
+library(sf)
+library(dplyr)
+library(tidyr)
+library(sfdep)
+library(spdep)
+
+set.seed(1234)
+
+# 1) Use your existing hex_agg, nb, wt  (no neighbor changes)
+hex_agg <- st_make_valid(hex_agg)
+
+# 2) Clean the variables used in Moran's I (numeric, no NA)
+vars <- c("trips_wk_morn", "trips_wk_eve", "trips_we_hol")
+hex_use <- hex_agg %>%
+  mutate(across(all_of(vars), ~ replace_na(as.numeric(.), 0)))
+
+# 3) Convert existing nb (+ optional wt) to spdep listw (no topology changes)
+#    If 'wt' exists from st_weights(), pass it via glist so we keep your weights.
+lw <- nb2listw(nb, glist = wt, style = "W", zero.policy = TRUE)
+
+# 4) Tiny helper returning a tibble from spdep::localmoran()
+lisa_tbl <- function(x, lw) {
+  out <- spdep::localmoran(x, lw, zero.policy = TRUE, alternative = "two.sided")
+  out <- as.data.frame(out)
+  # Standard names
+  names(out) <- c("Ii", "E.Ii", "Var.Ii", "Z.Ii", "Pr.z.")
+  tibble::as_tibble(out)
+}
+
+# 5) Local Moran’s I in your mutate -> unnest style (no internal cut(), so no error)
+
+# Weekday morning
+lisa_m <- hex_use %>%
+  mutate(local_moran = list(lisa_tbl(trips_wk_morn, lw)), .before = 1) %>%
+  unnest(local_moran)
+
+# Weekday evening
+lisa_e <- hex_use %>%
+  mutate(local_moran = list(lisa_tbl(trips_wk_eve, lw)), .before = 1) %>%
+  unnest(local_moran)
+
+# Weekend/holiday
+lisa_w <- hex_use %>%
+  mutate(local_moran = list(lisa_tbl(trips_we_hol, lw)), .before = 1) %>%
+  unnest(local_moran)
+```
+
+
+
+
+
+
+

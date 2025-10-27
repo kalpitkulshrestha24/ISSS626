@@ -2,8 +2,9 @@
 title: "In-class Exercise 6"
 author: "Kalpit Kulshrestha"
 ---
-#In-class exercise 6
-## Innstalling the required package
+
+#In-class exercise 6 \## Innstalling the required package
+
 ```{r}
 pacman::p_load(sf, tidyverse, tmap, sfdep, knitr)
 ```
@@ -13,6 +14,7 @@ Busstop = st_read(dsn = "data/LTADataMall/",
                   layer = "BusStop") %>%
   st_transform(crs = 3414)
 ```
+
 ```{r}
 mpsz = read_rds("data/rds/mpsz_sf.rds")
 glimpse(mpsz)
@@ -21,13 +23,16 @@ glimpse(mpsz)
 ```{r}
 odbus <- read_csv("data/LTADataMall/origin_destination_bus_202508.csv")
 ```
+
 ```{r}
 tm_shape(mpsz) + 
   tm_polygons() +
 tm_shape(Busstop) +
   tm_dots()
 ```
+
 ## joining_left
+
 ```{r}
 Busstop_in_sg <- st_join(
   Busstop, mpsz,
@@ -36,14 +41,15 @@ Busstop_in_sg <- st_join(
 Busstop_in_sg
 ```
 
-
 ```{r}
 tm_shape(mpsz) + 
   tm_polygons() +
 tm_shape(Busstop_in_sg) +
   tm_dots()
 ```
+
 ## Deriving Analytical Heaxagon
+
 ```{r}
 hexagon <- st_make_grid(mpsz,
                         cellsize = 700,
@@ -53,6 +59,7 @@ hexagon <- st_make_grid(mpsz,
 ```
 
 ## filtering hexagon with bus stops
+
 ```{r}
 hexagon$n_collisions = 
   lengths(st_intersects(
@@ -62,6 +69,7 @@ hexagon <- filter(hexagon, n_collisions > 0)
 ```
 
 ## Assigning ids to each hexagon
+
 ```{r}
 hexagon <- hexagon %>%
   select(, n_collisions)
@@ -74,7 +82,9 @@ kable(head(hexagon))
 ```
 
 ## Preparing Trip Generation Data
+
 ### Cleaning the data
+
 ```{r}
 trips <- odbus %>%
   select(c(ORIGIN_PT_CODE, DAY_TYPE, TIME_PER_HOUR, TOTAL_TRIPS)) %>%
@@ -84,6 +94,7 @@ trips <- odbus %>%
 trips$BUS_STOP_N <- as.factor(trips$BUS_STOP_N)
 kable(head(trips))
 ```
+
 ```{r}
 bs_hex <- st_intersection(
   Busstop, hexagon) %>%
@@ -91,21 +102,10 @@ bs_hex <- st_intersection(
   select(c(BUS_STOP_N, HEX_ID))
 kable(head(bs_hex))
 ```
+
 ## adding HEX_ID into bus trips data
+
 ```{r}
 trips <- inner_join(trips, bs_hex)
 kable(head(trips))
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
