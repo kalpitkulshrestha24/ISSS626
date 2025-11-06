@@ -3,7 +3,9 @@ title: "In-class Exercise 6"
 author: "Kalpit Kulshrestha"
 ---
 
-#In-class exercise 6 \## Innstalling the required package
+#In-class exercise 6
+
+## Innstalling the required package
 
 ```{r}
 pacman::p_load(sf, tidyverse, tmap, sfdep, knitr)

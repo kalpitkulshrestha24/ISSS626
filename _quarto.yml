@@ -2,6 +2,7 @@ project:
   type: website
 
 website:
+  favicon: "images/pagicon.jpg"
   title: "ISSS626- GAA"
   navbar:
     background: secondary

@@ -5,7 +5,8 @@ date: "16/0ct/2024"
 date-modified: "Last-modified"
 ---
 
-# In-class exercise 6 
+# Take-Home Exercise 2
+
 ## Innstalling the required package
 
 ```{r}
@@ -113,9 +114,8 @@ trips <- inner_join(trips, bs_hex)
 kable(head(trips))
 ```
 
-**setting the apothem**
-Here. `st_make_grid(cellsize = 375)` sets the grid spacing, not the apothem.
-For a 375 m apothem (center → edge), use width = 750 and height ≈ 866.0254.
+**setting the apothem** Here. `st_make_grid(cellsize = 375)` sets the grid spacing, not the apothem. For a 375 m apothem (center → edge), use width = 750 and height ≈ 866.0254.
+
 ```{r}
 library(units); library(stringr)
 
@@ -135,11 +135,13 @@ hexagon <- st_make_grid(
 
 hexagon$HEX_ID <- sprintf("H%05d", seq_len(nrow(hexagon)))
 ```
+
 ## Mapping the bus stop on the correct grid
 
 filtering by `DAY_TYPE` and hour ranges, sum trips per bus stop, then per hex.
 
 ### Helper aggregator
+
 ```{r}
 aggregate_window <- function(day_type, hr_min, hr_max, label){
   trips |>
@@ -156,13 +158,14 @@ aggregate_window <- function(day_type, hr_min, hr_max, label){
 }
 ```
 
-
 ```{r}
 wk_morn <- aggregate_window("WEEKDAY",             6,  9,  "wk_morn")
 wk_eve  <- aggregate_window("WEEKDAY",            17, 20,  "wk_eve")
 we_hol  <- aggregate_window("WEEKENDS/HOLIDAY",   11, 20,  "we_hol")
 ```
+
 ### Wide join back to hex polygons
+
 ```{r}
 hex_agg <- hexagon |>
   left_join(wk_morn |> select(HEX_ID, Trips) |> rename(trips_wk_morn = Trips), by="HEX_ID") |>
@@ -173,8 +176,8 @@ hex_agg <- hexagon |>
 
 ## Geovisualise trip distributions
 
-choropleths for each window.
-`
+choropleths for each window. \`
+
 ```{r}
 library(tmap); library(classInt); library(RColorBrewer)
 tmap_mode("plot")
@@ -235,7 +238,7 @@ plot_window_cont <- function(data, value_col, title){
 
 ## LMSA (Local Moran’s I) and significant clusters map
 
-Explanation: build neighbors, compute Local Moran’s I with permutation p-values, show only p<0.05 clusters.
+Explanation: build neighbors, compute Local Moran’s I with permutation p-values, show only p\<0.05 clusters.
 
 ```{r}
 # 0) Packages
@@ -295,8 +298,3 @@ lisa_w <- hex_use %>%
 ```
 
 nxnnx
-
-
-
-
-
