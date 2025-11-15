@@ -353,30 +353,39 @@ plot(mlr.vif)
 check_model(condo.mlr1,
             check = "linearity")
 ```
+
 #### Test for normality assumption
+
 ```{r}
 check_normality(condo.mlr1)
 ```
+
 ```{r}
 plot(check_normality(condo.mlr1), 
      type = "qq")
 ```
+
 ```{r}
 check_model(condo.mlr1,
             check= "normality")
 ```
+
 #### Test for spatial autocorrelation
+
 ```{r}
 mlr.output <- as.data.frame(condo.mlr1$residuals)
 ```
+
 ```{r}
 condo_resale.sf <- cbind(condo_resale.sf, 
                         condo.mlr1$residuals) %>%
 rename(`MLR_RES` = `condo.mlr1.residuals`)
 ```
+
 ```{r}
 tmap_mode("view")
 ```
+
 ```{r}
 tm_shape(mpsz_svy21) +
   tm_polygons(fill_alpha = 0.4) +
@@ -401,6 +410,7 @@ tm_shape(condo_resale.sf) +
 ```{r}
 tmap_mode("plot")
 ```
+
 ```{r}
 condo_resale.sf <- condo_resale.sf %>% 
   mutate(
@@ -421,7 +431,9 @@ global_moran_perm(
   alternative = "two.sided", 
   nsim = 499)
 ```
+
 ## Building Hedonic Pricing Models using GWmodel
+
 ### Building Fixed Bandwidth GWR Model
 
 ```{r}
@@ -438,7 +450,9 @@ bw.fixed <- bw.gwr(
   adaptive=FALSE, 
   longlat=FALSE)
 ```
+
 #### GWModel method - fixed bandwith
+
 ```{r}
 gwr.fixed <- gwr.basic(
   formula = SELLING_PRICE ~ AREA_SQM + AGE  + 
@@ -452,10 +466,13 @@ gwr.fixed <- gwr.basic(
   kernel = 'gaussian', 
   longlat = FALSE)
 ```
+
 ```{r}
 gwr.fixed
 ```
+
 ### Building Adaptive Bandwidth GWR Model
+
 In this section, we will calibrate the gwr-based hedonic pricing model by using adaptive bandwidth approach.
 
 #### Computing the adaptive bandwidt
@@ -474,7 +491,9 @@ bw.adaptive <- bw.gwr(
   adaptive=TRUE, 
   longlat=FALSE)
 ```
+
 #### Constructing the adaptive bandwidth gwr model
+
 ```{r}
 gwr.adaptive <- gwr.basic(
   formula = SELLING_PRICE ~ AREA_SQM + AGE + 
@@ -488,18 +507,23 @@ gwr.adaptive <- gwr.basic(
   adaptive=TRUE, 
   longlat = FALSE)
 ```
+
 ```{r}
 gwr.adaptive
 ```
+
 ### Visualising GWR Output
+
 --------------- write outcome--------------------
 
 ### Converting SDF into sf data.frame
+
 ```{r}
 condo_resale.sf.adaptive <-
   st_as_sf(gwr.adaptive$SDF) %>%
   st_transform(crs=3414)
 ```
+
 ```{r}
 glimpse(condo_resale.sf.adaptive)
 ```
@@ -507,7 +531,9 @@ glimpse(condo_resale.sf.adaptive)
 ```{r}
 summary(gwr.adaptive$SDF$yhat)
 ```
+
 ### Visualising local R2
+
 ```{r}
 tmap_mode("view")
 tm_shape(mpsz_svy21)+
@@ -520,7 +546,9 @@ tm_shape(condo_resale.sf.adaptive) +
 
 tmap_mode("plot")
 ```
-### Visualising coefficient  estimates
+
+### Visualising coefficient estimates
+
 ```{r}
 tmap_mode("view")
 AREA_SQM_SE <- tm_shape(mpsz_svy21)+
@@ -545,6 +573,5 @@ tmap_arrange(AREA_SQM_SE, AREA_SQM_TV,
 
 tmap_mode("plot")
 ```
-
 
 **End of the page**

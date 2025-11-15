@@ -26,6 +26,8 @@ website:
             href: "In-class Exercise/In-class Exercise 6/In-class Exercise 6.html"
           - text: "In-Class Exercise 07"
             href: "In-class Exercise/In-class Exercise 7/In-class EX07.html"
+          - text: "In-Class Exercise 10"
+            href: "In-class Exercise/In-class Exercise 10/In-class EX10.html"
       - text: "Hands-on Exercise"
         menu: 
           - text: "Hands-on Exercise 1A"
@@ -48,12 +50,16 @@ website:
             href: "Hands-on_Exercise/Hands-on EX07/Hands-on EX07.html"
           - text: "Hands-on Exercise 8"
             href: "Hands-on_Exercise/Hands-on EX08/Hands-on EX08.html"
+          - text: "Hands-on Exercise 9"
+            href: "Hands-on_Exercise/Hands-on EX09/Hands-on EX09.html"
       - text: "Take Home Exercise"
         menu: 
           - text: "Take Home Exercise 1"
             href: "Take Home Exercise/Take-Home Exercise 1/Take-Home Exercise 1.html"
           - text: "Take Home Exercise 2"
-            href: "Take Home Exercise/Take-Home Exercise 2/Take-Home Exercise 2.html"
+            href: "Take Home Exercise/Take-Home Exercise 2/Take-Home_Exercise 2.html"
+          - text: "Take Home Exercise 3"
+            href: "Take Home Exercise/Take-Home Exercise 3/Take-Home EX03.html"
     right:
       - icon: linkedin
         href: "https://www.linkedin.com/in/kalpit-kulshrestha-a1297b178/"

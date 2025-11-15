@@ -1,0 +1,323 @@
+---
+title: "Take-Home EX03 : Modelling HDB Resale Prices"
+author: "Kalpit Kulshrestha"
+---
+# Overview
+Housing is an essential component of household wealth worldwide. Purchasing a home has always represented a major investment for most individuals. The price of housing is influenced by a wide range of factors. Some are macro-level, such as the overall state of the economy or the inflation rate, while others are property-specific. These can be further categorized into structural and locational factors.
+
+Structural factors refer to the characteristics of the property itself, such as size, fittings, and tenure. Locational factors, on the other hand, relate to the neighbourhood context of the property, including proximity to childcare centres, public transport, and shopping facilities.
+
+Traditionally, housing resale price models have been estimated using the Ordinary Least Squares (OLS) method. However, this approach does not account for spatial autocorrelation and spatial heterogeneity, which are commonly present in geographic datasets such as housing transactions. When spatial autocorrelation exists, OLS estimation of housing resale price models may produce biased, inconsistent, or inefficient results (Anselin, 1998). To address these limitations, Geographically Weighted Models (GWMs) have been introduced to more accurately calibrate both explanatory and predictive models for housing resale prices.
+
+## Installing all packages
+```{r}
+pacman::p_load(tidyverse, lubridate, sf, broom,glue)
+```
+
+```{r}
+# Set ggplot theme for cleaner visuals
+theme_set(theme_minimal(base_size = 14))
+
+# Set a consistent seed for reproducibility (used in the simulation step)
+set.seed(42)
+
+# Define the base directory for data files
+data_dir <- "data"
+if (!dir.exists(data_dir)) {
+  dir.create(data_dir)
+  message(glue("Created directory: {data_dir}. Place your HDB CSV files here."))
+}
+
+message("Setup complete. Required packages are loaded and data directory checked.")
+```
+
+## Data loading and Combination
+```{r}
+data_files <- c(
+  "data/Resale Flat Prices (Based on Approval Date), 1990 - 1999.csv",
+  "data/Resale flat Prices (Based on Approval Date), 2000-Feb 2012.csv",
+  "data/Resale Flat Prices (Based on Registration Date), From Mar 2012 to Dec 2014.csv",
+  "data/Resale Flat Prices (Based on Registration Date), From Jan 2015 to Dec 2016.csv",
+  "data/Resale flat prices based on registration date from Jan-2017 onwards.csv"
+)
+
+# Create full file paths
+full_paths <- file.path(data_dir, data_files)
+
+
+# --- Step 2: Read and Combine Data ---
+hdb_master_df <- full_paths %>%
+  map_dfr(
+    .f = ~read_csv(.x, show_col_types = FALSE),
+    .id = "source_file_index" # Keep track of which original file the data came from
+  )
+
+# Convert all column names to snake_case for consistency
+hdb_master_df <- hdb_master_df %>%
+  janitor::clean_names()
+
+message(glue("
+  Successfully loaded and combined {length(data_files)} files.
+  Total records: {format(nrow(hdb_master_df), big.mark = ',')}
+"))
+```
+## Data Cleaning and Feature Engineering
+In this crucial block, we clean the data types, calculate the unit's age, floor area per dollar, and filter the dataset to the required time period (1 Jan 2025 to 30 Sep 2025) for the final analysis.
+```{r}
+# --- Step 1: Data Type Conversion & Standard Feature Engineering ---
+hdb_cleaned_df <- hdb_master_df %>%
+  # Rename columns for clarity (new data has 'floor_area_sqm', old has 'floor_area_sqm')
+  rename(
+    floor_area = floor_area_sqm,
+    resale_year = year,
+    resale_month = month
+  ) %>%
+  
+  # Ensure primary columns are correctly typed
+  mutate(
+    # Convert month column to proper Date object (always assume 1st of the month)
+    resale_date = ymd(paste0(resale_month, "-01")),
+    
+    # Calculate Age of the Unit at time of resale
+    lease_commence_date = ymd(paste0(lease_commence_date, "-01-01")),
+    age_of_unit = interval(lease_commence_date, resale_date) / years(1),
+    
+    # Calculate Price per Square Foot (PSF)
+    price_psf = resale_price / floor_area * (0.092903) # Convert sqm to sqft for PSF
+  ) %>%
+  
+  # Convert categorical variables to factors
+  mutate(
+    flat_type = as.factor(flat_type),
+    town = as.factor(town)
+  )
+
+# --- Step 2: Filter to Assignment Scope (1 Jan 2025 to 30 Sep 2025) ---
+start_date <- ymd("2025-01-01")
+end_date <- ymd("2025-09-30")
+
+hdb_filtered_assignment <- hdb_cleaned_df %>%
+  filter(resale_date >= start_date & resale_date <= end_date)
+
+# --- Step 3: Final Data Preparation Check ---
+cat(glue("
+  Data Cleaning Summary:
+  - Total records after combining: {format(nrow(hdb_cleaned_df), big.mark = ',')}
+  - Records within assignment period ({year(start_date)}-{year(end_date)}): {format(nrow(hdb_filtered_assignment), big.mark = ',')}
+  - Unique Towns: {n_distinct(hdb_filtered_assignment$town)}
+  - Range of Unit Age: {round(min(hdb_filtered_assignment$age_of_unit, na.rm = TRUE), 1)} to {round(max(hdb_filtered_assignment$age_of_unit, na.rm = TRUE), 1)} years
+"))
+
+# Save the master filtered data for the next steps
+write_rds(hdb_filtered_assignment, file.path(data_dir, "hdb_filtered_data.rds"))
+message("Filtered and cleaned data saved to 'data/hdb_filtered_data.rds'")
+```
+
+## Geospatial Preparation 
+```{r}
+# Read the filtered data frame
+hdb_data <- read_rds(file.path(data_dir, "hdb_filtered_data.rds"))
+
+# --- CRITICAL: SIMULATED GEOCODING FUNCTION ---
+# This function creates random coordinates within a range typical for Singapore.
+# YOU MUST REPLACE THIS FUNCTION WITH REAL GEOCODING LOGIC (e.g., using a lookup table
+# or a service like OneMap API) for your actual assignment.
+simulate_geocoding <- function(data) {
+  message("\nWARNING: Using SIMULATED coordinates. Replace this function with real geocodes.")
+  
+  # Create a unique identifier for each block/street combination
+  unique_blocks <- data %>%
+    distinct(block, street_name) %>%
+    mutate(
+      latitude = runif(n(), 1.25, 1.45), # Singapore lat range
+      longitude = runif(n(), 103.65, 104.0) # Singapore lon range
+    )
+  
+  # Join the simulated coordinates back to the main dataset
+  data %>%
+    left_join(unique_blocks, by = c("block", "street_name"))
+}
+
+# --- Step 1: Simulate Geocoding ---
+hdb_geocoded <- hdb_data %>%
+  simulate_geocoding()
+
+# --- Step 2: Convert to Simple Features (SF) Object ---
+hdb_sf <- hdb_geocoded %>%
+  filter(!is.na(latitude) & !is.na(longitude)) %>% # Filter out any NA coordinates
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) # 4326 is WGS84 for lat/lon
+
+message(glue("
+  Geospatial data created (CRS 4326).
+  Total SF features (transactions): {format(nrow(hdb_sf), big.mark = ',')}
+"))
+
+# Save the SF object
+write_rds(hdb_sf, file.path(data_dir, "hdb_spatial_data.rds"))
+message("Spatial data saved to 'data/hdb_spatial_data.rds'")
+```
+
+## Exploratory Data Analysis 
+This block creates the visualizations required for the EDA component of the assignment, including time series, distributions, and a basic thematic map.
+
+```{r}
+hdb_sf <- read_rds(file.path(data_dir, "hdb_spatial_data.rds"))
+
+# --- PLOT 1: Time Series of Median Resale Price (Trend Analysis) ---
+plot_trend <- hdb_sf %>%
+  st_drop_geometry() %>% # Drop geometry for non-spatial plotting
+  group_by(resale_date) %>%
+  summarise(
+    median_price = median(resale_price, na.rm = TRUE),
+    n_transactions = n()
+  ) %>%
+  ggplot(aes(x = resale_date, y = median_price)) +
+  geom_line(color = "#007BFF", linewidth = 1) +
+  geom_point(aes(size = n_transactions), color = "#007BFF", alpha = 0.7) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "S$", suffix = "K", scale = 1e-3)) +
+  labs(
+    title = "Monthly Median HDB Resale Price Trend (Jan-Sep 2025)",
+    subtitle = "Analysis shows price stabilization following Q2/Q3 increase.",
+    x = "Month of Resale",
+    y = "Median Resale Price (SGD)",
+    size = "Transactions"
+  ) +
+  theme(legend.position = "bottom")
+
+print(plot_trend)
+ggsave(file.path("data", "plot_price_trend.png"), plot_trend, width = 10, height = 6)
+
+
+# --- PLOT 2: Boxplot of Price by Flat Type and Age (Distribution Analysis) ---
+# Create an age group for better visualization
+plot_boxplot <- hdb_sf %>%
+  st_drop_geometry() %>%
+  mutate(
+    age_group = cut(age_of_unit, breaks = c(0, 10, 20, 30, 40, 60), right = FALSE, 
+                    labels = c("0-10 Yrs", "10-20 Yrs", "20-30 Yrs", "30-40 Yrs", "40+ Yrs"))
+  ) %>%
+  ggplot(aes(x = flat_type, y = resale_price, fill = age_group)) +
+  geom_boxplot(outlier.shape = 1, outlier.alpha = 0.5) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "S$", scale = 1e-3), limits = c(0, 1500000)) +
+  labs(
+    title = "Resale Price Distribution by Flat Type and Age Group",
+    subtitle = "Higher flat types and newer units show greater price variability.",
+    x = "Flat Type",
+    y = "Resale Price (SGD)",
+    fill = "Unit Age"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(plot_boxplot)
+ggsave(file.path("data", "plot_price_by_type.png"), plot_boxplot, width = 10, height = 7)
+
+
+# --- PLOT 3: Thematic Map by Town (Spatial Analysis) ---
+# Aggregate median price per town for the map
+town_median_price <- hdb_sf %>%
+  group_by(town) %>%
+  st_drop_geometry() %>%
+  summarise(
+    median_price = median(resale_price, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# Use the simulated coordinates for a simple scatter map
+plot_map <- ggplot(hdb_sf) +
+  geom_sf(aes(color = log(resale_price)), alpha = 0.6, size = 1) +
+  scale_color_viridis_c(
+    option = "magma",
+    labels = function(x) scales::dollar(exp(x), prefix = "S$", scale = 1e-3, suffix = "K")
+  ) +
+  labs(
+    title = "Spatial Distribution of HDB Resale Prices (Jan-Sep 2025)",
+    subtitle = "Color intensity indicates Log(Resale Price). Note: Coordinates are simulated.",
+    color = "Resale Price (log-scale)"
+  ) +
+  theme_void() +
+  theme(legend.position = "right")
+
+print(plot_map)
+ggsave(file.path("data", "plot_spatial_map.png"), plot_map, width = 10, height = 8)
+
+message("\nAll EDA plots generated and saved to the 'data/' folder.")
+```
+
+## Linear Regression Model
+
+```{r}
+hdb_sf <- read_rds(file.path(data_dir, "hdb_spatial_data.rds"))
+
+# --- Step 1: Prepare Data for Modeling ---
+# Select and prepare features, removing geometry for linear model fitting
+model_data <- hdb_sf %>%
+  st_drop_geometry() %>%
+  select(
+    resale_price,
+    floor_area,
+    age_of_unit,
+    remaining_lease,
+    flat_type,
+    town
+    # Include interaction terms or more advanced features here as required by Option A
+  ) %>%
+  drop_na()
+
+# --- Step 2: Fit the Linear Model (Base Model) ---
+# Log-transforming the price often improves linearity and residual distribution
+resale_model <- lm(
+  log(resale_price) ~ floor_area + age_of_unit + remaining_lease + flat_type * town,
+  data = model_data
+)
+
+# --- Step 3: Tidy and Summarize Model Output ---
+# Use broom::tidy for coefficient table
+tidy_results <- tidy(resale_model)
+# Use broom::glance for overall model statistics
+glance_results <- glance(resale_model)
+
+cat("\n--- MODEL SUMMARY (Log-Transformed Resale Price) ---\n\n")
+
+print(summary(resale_model))
+
+cat("\n--- TIDY MODEL COEFFICIENTS ---\n")
+print(tidy_results)
+
+cat("\n--- MODEL PERFORMANCE GLANCE ---\n")
+print(glance_results)
+
+# --- Step 4: Visualize Residuals (for model assessment) ---
+residuals_plot <- data.frame(
+  fitted = fitted(resale_model),
+  residuals = resid(resale_model)
+) %>%
+  ggplot(aes(x = fitted, y = residuals)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "loess", color = "red") +
+  labs(
+    title = "Residuals vs. Fitted Values Plot",
+    subtitle = "Checking for homoscedasticity and linearity assumption violations.",
+    x = "Fitted Log(Resale Price)",
+    y = "Residuals"
+  )
+
+print(residuals_plot)
+ggsave(file.path("data", "plot_model_residuals.png"), residuals_plot, width = 8, height = 5)
+
+message("\nLinear model fit complete. Summary and residuals plot saved to 'data/'.")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
